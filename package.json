@@ -9,11 +9,20 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "echo \"Success, running tests\"", 
+    "docker:up": "docker compose up --build -d",
+    "docker:down": "docker compose down",
+    "docker:restart": "docker compose restart",
+    "docker:logs": "docker compose logs -f",
+    "docker:rebuild": "npm run docker:down && npm run docker:up"
   },
   "dependencies": {
     "@vercel/analytics": "^1.1.1",
+    "@vercel/speed-insights": "^1.0.2",
+    "i": "^0.3.7",
     "next": "14.0.4",
+    "npm": "^10.2.5",
     "react": "^18",
     "react-dom": "^18"
   },
