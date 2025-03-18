@@ -1,7 +1,7 @@
 "use client";
 
 import { SideBar } from "@/shared/infra/presentation/components";
-import { GearIcon } from "../../components/Icons";
+import { GearIcon, ImageIcon } from "../../components/Icons";
 import React from "react";
 import { AuthenticatedLayoutProps } from "./types";
 import { PAGES } from "@/shared/infra/utils/constants";
@@ -9,66 +9,28 @@ import { PAGES } from "@/shared/infra/utils/constants";
 const AuthenticatedLayout = ({ children }: AuthenticatedLayoutProps) => {
   return (
     <>
-      <SideBar.Root>
-        <SideBar.Logo />
-        <SideBar.ItemContainer>
-          <SideBar.Item
-            title="Admin"
-            Icon={GearIcon}
-            subItems={[PAGES.HELP, PAGES.HOME_PAGE, PAGES.ADMIN]}
+      <div className="flex h-dvh w-dvw flex-row relative">
+        <SideBar.Root>
+          <SideBar.Logo />
+          <SideBar.ItemContainer>
+            <SideBar.Item
+              title="Admin"
+              Icon={GearIcon}
+              subItems={[PAGES.HELP, PAGES.HOME_PAGE, PAGES.ADMIN]}
+            />
+            <SideBar.Item
+              title="Imagens"
+              Icon={ImageIcon}
+              subItems={[PAGES.ADD_IMAGE, PAGES.IMAGES_BANK]}
+            />
+          </SideBar.ItemContainer>
+          <SideBar.Footer
+            userName={"Ciclano Cleberson"}
+            userRole={"Professor"}
           />
-          <SideBar.Item
-            title="Admin"
-            Icon={GearIcon}
-            subItems={[PAGES.HELP, PAGES.HOME_PAGE]}
-          />
-          <SideBar.Item
-            title="Admin"
-            Icon={GearIcon}
-            subItems={[PAGES.HELP, PAGES.HOME_PAGE]}
-          />
-          <SideBar.Item
-            title="Admin"
-            Icon={GearIcon}
-            subItems={[PAGES.HELP, PAGES.HOME_PAGE]}
-          />
-          <SideBar.Item
-            title="Admin"
-            Icon={GearIcon}
-            subItems={[PAGES.HELP, PAGES.HOME_PAGE]}
-          />
-          <SideBar.Item
-            title="Admin"
-            Icon={GearIcon}
-            subItems={[PAGES.HELP, PAGES.HOME_PAGE]}
-          />
-          <SideBar.Item
-            title="Admin"
-            Icon={GearIcon}
-            subItems={[PAGES.HELP, PAGES.HOME_PAGE]}
-          />
-          <SideBar.Item
-            title="Admin"
-            Icon={GearIcon}
-            subItems={[PAGES.HELP, PAGES.HOME_PAGE]}
-          />
-          <SideBar.Item
-            title="Admin"
-            Icon={GearIcon}
-            subItems={[PAGES.HELP, PAGES.HOME_PAGE]}
-          />
-          <SideBar.Item
-            title="Admin"
-            Icon={GearIcon}
-            subItems={[PAGES.HELP, PAGES.HOME_PAGE]}
-          />
-        </SideBar.ItemContainer>
-        <SideBar.Footer userName={"fulano"} userRole={"pica"} />
-      </SideBar.Root>
-      <div className="ml-[380px]">
-      {children}
+        </SideBar.Root>
+        <div className="h-full w-full">{children}</div>
       </div>
-      
     </>
   );
 };

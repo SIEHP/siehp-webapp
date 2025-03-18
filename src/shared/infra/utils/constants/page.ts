@@ -15,9 +15,18 @@ export const PAGES: {
     label: "Administração",
     link: "/admin",
   },
+  ADD_IMAGE: {
+    label: "Adicionar Imagem",
+    link: "/professor/addImage",
+  },
+  IMAGES_BANK: {
+    label: "Banco de Imagens",
+    link: "/professor/imagesBank",
+  },
 };
 
 export const LANDING_PAGE_NAVBAR_LINKS: (keyof typeof PagesEnum)[] = [
   // "HELP",
   // "HOME_PAGE",
+  // "ADD_IMAGES",
 ];
