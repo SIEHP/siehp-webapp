@@ -17,7 +17,7 @@ const AdminPagesHeaderRoot = ({
 }: AdminPagesHeaderRootProps) => {
   return (
     <div
-      className={`w-100% mx-4 mb-1.5 mt-[4.25rem]  flex h-2.5 flex-wrap content-center items-center ${className ?? ""}`}
+      className={`w-100% flex h-2.5 flex-wrap content-center items-center ${className ?? ""}`}
       {...props}
     >
       {children}
@@ -32,7 +32,7 @@ const AdminPagesHeaderTitle = ({
 }: AdminPagesHeaderTitleProps) => {
   return (
     <h1
-      className={`left-0 text-[1.5rem] font-semi-bold text-gray-900-tk ${className ?? ""}`}
+      className={`left-0 text-lg font-semi-bold text-gray-100-tk ${className ?? ""}`}
       {...props}
     >
       {children}
@@ -101,10 +101,10 @@ const AdminPagesHeaderFilter = ({
         type="text"
         placeholder="Pesquisar..."
         {...props}
-        className={`text-1 placeholder-1 h-2.5 w-[15rem] appearance-none rounded-[4rem] border-none bg-gray-700-tk py-[0.7rem] pl-1 pr-[45px] text-gray-100-tk placeholder-gray-100-tk  ${className ?? ""}`}
+        className={`h-2.5 w-[250px] appearance-none rounded-[4rem] border-none bg-gray-300-tk py-[10px] pl-1 pr-[45px] text-md font-regular text-gray-900-tk placeholder-gray-900-tk  ${className ?? ""}`}
       />
       <SearchIcon
-        className="absolute right-[15px] top-[6px] [&>path]:fill-gray-300-tk"
+        className="absolute right-[15px] top-[7px] [&>path]:fill-gray-300-tk"
         width={24}
         height={24}
         viewBox="0 0 30 24"
