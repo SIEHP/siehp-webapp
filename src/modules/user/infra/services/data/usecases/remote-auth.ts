@@ -8,30 +8,20 @@ import { Auth } from "@/modules/user/domain/usecases";
 import { SIEHPConfig } from "@/shared/config/siehpConfig";
 import { checkApiError } from "@/shared/infra/utils/functions/check-api-error";
 import { Auth as AuthModel } from "@/modules/user/domain/models";
+import { ApiError } from "@/shared/domain/models/error";
 
 export class RemoteAuth implements Auth {
-  async authUser({
+  async login({
     email,
     password,
   }: AuthUserParamsDTO): Promise<AuthUserResponseDTO> {
-    // const httpResponse = await axios.post<Auth | ApiError>(
-    //   `${SIEHPConfig.API_URL}/user/auth`,
-    //   {
-    //     email,
-    //     password,
-    //   },
-    // ); TODO: Uncomment after implementation of the API and layout
-
-    const httpResponse: { data: AuthModel } = {
-      data: {
-        token: "toke1232313",
-        user: {
-          id: 1,
-          name: "Cleberson",
-          role: "Ajudante de Servente",
-        },
-      },
-    };
+     const httpResponse = await axios.post<AuthModel | ApiError>(
+    `${SIEHPConfig.API_URL}/user/login`,
+       {
+         email,
+         password,
+       },
+     ); 
 
     const error = checkApiError({
       data: httpResponse.data,
@@ -42,6 +32,6 @@ export class RemoteAuth implements Auth {
       throw new Error(error);
     }
 
-    return httpResponse.data;
+    return httpResponse.data as AuthModel;
   }
 }
