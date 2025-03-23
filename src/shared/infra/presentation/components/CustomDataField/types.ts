@@ -20,3 +20,9 @@ export interface DataFieldContentTextProps
 
 export interface DataFieldContentDateProps
   extends React.HTMLAttributes<HTMLInputElement> {}
+
+export interface DataFieldContentTagProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  onTagsChange?: (tags: string[]) => void;
+  initialTags?: string[];
+}

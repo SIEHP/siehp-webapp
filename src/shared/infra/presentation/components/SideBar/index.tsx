@@ -11,6 +11,8 @@ import { ChevronArrowIcon } from "../Icons";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "../Avatar/avatar";
+import { UserIcon } from "../Icons";
 
 const SideBarRoot = ({ children }: SideBarRootProps) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -128,14 +130,20 @@ const SideBarItem = ({ Icon, title, subItems }: SideBarItemProps) => {
 const SideBarFooter = ({ userName, userRole }: SideBarFooterProps) => {
   return (
     <div
-      className={`w-full p-3 pb-3 shadow-[rgba(0,_0,_0,_0.25)_0px_-0.5rem_0.5rem_0px]`}
+      className={`flex flex-col w-full p-2 gap-2 shadow-[rgba(0,_0,_0,_0.25)_0px_-0.5rem_0.5rem_0px]`}
     >
-      <div className="text-gray-900-tk">
-        <p className="text-lg font-semi-bold">{userName}</p>
-        <p className="text-md font-regular">{userRole}</p>
+      <div className="flex items-center justify-start gap-1">
+        <div>
+          <UserIcon className="w-[100px] h-[100px]"/>
+        </div>
+        <div className="text-gray-900-tk">
+          <p className="text-lg font-semi-bold">{userName}</p>
+          <p className="text-md font-regular">{userRole}</p>
+        </div>
       </div>
-      <div>
-        <Link href="#" className="text-lg font-regular text-gray-700-tk">
+      
+      <div className="flex items-center justify-start">
+        <Link href="#" className="text-lg font-semi-bold text-gray-700-tk">
           Ajuda
         </Link>
       </div>
