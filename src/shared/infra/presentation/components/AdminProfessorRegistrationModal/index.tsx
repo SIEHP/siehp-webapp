@@ -6,7 +6,7 @@ interface IModal {
   onClose: () => void;
 }
 
-export function Modal({ isOpen, onClose }: IModal) {
+export function AdminProfessorRegistrationModal({ isOpen, onClose }: IModal) {
   const modalRef = React.useRef<HTMLDivElement>(null);
 
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
