@@ -4,7 +4,7 @@ import { AdminPagesHeader } from "../../../../../../../shared/infra/presentation
 import { CustomTable } from "../../../../../../../shared/infra/presentation/components/CustomTable";
 import { AddPeopleIcon } from "../../../../../../../shared/infra/presentation/components/Icons";
 import { useState } from "react";
-import { Modal } from "@/shared/infra/presentation/components/ModalRegistration";
+import { AdminProfessorRegistrationModal } from "@/shared/infra/presentation/components/AdminProfessorRegistrationModal";
 
 const ProfessorsPage = ({}) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -20,7 +20,7 @@ const ProfessorsPage = ({}) => {
   return (
     <>
       {/* exemplo, remover quando dor fazer integração */}
-      <Modal isOpen={open} onClose={handleCloseModal}></Modal>
+      <AdminProfessorRegistrationModal isOpen={open} onClose={handleCloseModal}></AdminProfessorRegistrationModal>
       <AdminPagesHeader.Root>
         <AdminPagesHeader.Title>Professores</AdminPagesHeader.Title>
         <AdminPagesHeader.Body>
