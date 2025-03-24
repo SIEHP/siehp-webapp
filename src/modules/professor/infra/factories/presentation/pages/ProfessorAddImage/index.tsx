@@ -10,7 +10,7 @@ import {
   ProfessorAddImageFormData,
   professorAddImageSchema,
 } from "./validation";
-import { clearProfessorImageFields } from "@/shared/infra/utils/functions/clear-fields";
+import { handleImageSelect as imageSelectHandler } from "@/shared/infra/utils/functions/image-picker";
 
 const ProfessorAddImagePage = () => {
   const [openValidationModal, setOpenValidationModal] =
@@ -52,20 +52,7 @@ const ProfessorAddImagePage = () => {
   };
 
   const handleImageSelect = (file: File | null) => {
-    setValue("imageFile", file);
-
-    if (file) {
-      // Converter a imagem para base64 para exibição
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        const base64data = reader.result as string;
-        setImagePreviewUrl(base64data);
-      };
-    } else {
-      // Se o arquivo for null, limpa o preview
-      setImagePreviewUrl(null);
-    }
+    imageSelectHandler(file, setValue, setImagePreviewUrl, "imageFile");
   };
 
   const handleLimparDados = () => {
