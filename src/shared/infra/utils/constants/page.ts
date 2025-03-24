@@ -17,11 +17,11 @@ export const PAGES: {
   },
   ADD_IMAGE: {
     label: "Adicionar Imagem",
-    link: "/professor/addImage",
+    link: "/professor/adicionar-imagem",
   },
   IMAGES_BANK: {
     label: "Banco de Imagens",
-    link: "/professor/imagesBank",
+    link: "/professor/banco-de-imagens",
   },
 };
 
