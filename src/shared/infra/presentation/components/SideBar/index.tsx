@@ -11,7 +11,7 @@ import { ChevronArrowIcon } from "../Icons";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { UserIcon, PencilIcon } from "../Icons";
+import { UserIcon, PencilIcon, LogoutIcon } from "../Icons";
 
 const SideBarRoot = ({ children }: SideBarRootProps) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -189,9 +189,16 @@ const SideBarFooter = ({ userName, userRole }: SideBarFooterProps) => {
       </div>
 
       <div className="flex items-center justify-start">
-        <Link href="#" className="text-lg font-semi-bold text-gray-700-tk">
+        <button
+          className="flex items-center justify-center gap-0.5 rounded-md bg-fail p-0.5"
+          onClick={() => {}}
+        >
+          <LogoutIcon className="h-[24px] w-[24px]  text-gray-900-tk" />
+          <p className="text-md font-semi-bold text-gray-900-tk">Sair</p>
+        </button>
+        {/* <Link href="#" className="text-lg font-semi-bold text-gray-700-tk">
           Ajuda
-        </Link>
+        </Link> */}
       </div>
     </div>
   );
