@@ -127,9 +127,7 @@ const ProfessorAddImagePage = () => {
         >
           <div className="flex w-full flex-wrap justify-between gap-0.75">
             <CustomDataField.Root className="md:w-[300px]">
-              <CustomDataField.Title>
-                Direitos de imagem:{" "}
-              </CustomDataField.Title>
+              <CustomDataField.Title>Direitos de imagem:</CustomDataField.Title>
               <CustomDataField.Content>
                 <Controller
                   name="direitosImagem"
