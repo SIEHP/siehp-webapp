@@ -42,7 +42,7 @@ const CustomDataFieldContent = ({
   ...props
 }: DataFieldContentProps) => {
   return (
-    <div className={`flex text-lg ${className ?? ""}`} {...props}>
+    <div className={`flex text-md ${className ?? ""}`} {...props}>
       {children}
     </div>
   );
@@ -114,24 +114,22 @@ const CustomDataFieldContentTag = ({
         "Node.js",
         "TailwindCSS",
         "NextJS",
-      ].filter((tag) => 
-        tag.toLowerCase().includes(query.toLowerCase()) && 
-        !tags.includes(tag)
+      ].filter(
+        (tag) =>
+          tag.toLowerCase().includes(query.toLowerCase()) &&
+          !tags.includes(tag),
       );
-      
+
       setSuggestions(mockSuggestions);
       setShowDropdown(true);
     },
-    [tags]
+    [tags],
   );
 
   const addTag = React.useCallback(
     (tag: string) => {
       const trimmedTag = tag.trim();
-      if (
-        trimmedTag &&
-        !tags.includes(trimmedTag)
-      ) {
+      if (trimmedTag && !tags.includes(trimmedTag)) {
         const newTags = [...tags, trimmedTag];
         setTags(newTags);
         onTagsChange?.(newTags);
@@ -140,7 +138,7 @@ const CustomDataFieldContentTag = ({
         setShowDropdown(false);
       }
     },
-    [tags, onTagsChange]
+    [tags, onTagsChange],
   );
 
   const removeTag = React.useCallback(
@@ -149,7 +147,7 @@ const CustomDataFieldContentTag = ({
       setTags(newTags);
       onTagsChange?.(newTags);
     },
-    [tags, onTagsChange]
+    [tags, onTagsChange],
   );
 
   React.useEffect(() => {
@@ -171,13 +169,13 @@ const CustomDataFieldContentTag = ({
   }, []);
 
   return (
-    <div 
+    <div
       ref={containerRef}
-      className={`min-h-[50px] w-full relative ${className ?? ""}`} 
+      className={`relative min-h-[50px] w-full ${className ?? ""}`}
       {...props}
     >
-      <div className="w-full flex flex-col rounded-lg bg-gray-700-tk">
-        <div className="w-full relative">
+      <div className="flex w-full flex-col rounded-lg bg-gray-700-tk">
+        <div className="relative w-full">
           <input
             ref={inputRef}
             type="text"
@@ -193,41 +191,43 @@ const CustomDataFieldContentTag = ({
               }
             }}
             placeholder="Digite uma tag..."
-            className="w-full max-w-[300px] min-h-[50px] rounded-md bg-gray-700-tk px-0.5 text-gray-100-tk"
+            className="min-h-[50px] w-full max-w-[300px] rounded-md bg-gray-700-tk px-0.5 text-gray-100-tk"
           />
-          
+
           {showDropdown && (
-            <div 
+            <div
               ref={dropdownRef}
-              className="absolute z-10 w-full max-h-[200px] overflow-auto rounded-md bg-gray-800-tk shadow-xl border border-gray-600-tk"
+              className="bg-gray-800-tk border-gray-600-tk absolute z-10 max-h-[200px] w-full overflow-auto rounded-md border shadow-xl"
             >
-                {suggestions.length > 0 ? (
-                  suggestions.map((suggestion) => (
-                    <div
-                      key={suggestion}
-                      onClick={() => addTag(suggestion)}
-                      className="px-0.5 py-0.5 text-md font-semi-bold cursor-pointer hover:bg-gray-600-tk text-gray-100-tk bg-gray-700-tk border-b border-gray-600-tk last:border-b-0"
-                    >
-                      {suggestion}
-                    </div>
-                  ))
-                ) : inputValue.trim() ? (
+              {suggestions.length > 0 ? (
+                suggestions.map((suggestion) => (
                   <div
-                    onClick={() => addTag(inputValue)}
-                    className="px-0.5 py-0.5 cursor-pointer hover:bg-gray-600-tk text-gray-100-tk font-semi-bold text-md bg-gray-700-tk"
+                    key={suggestion}
+                    onClick={() => addTag(suggestion)}
+                    className="hover:bg-gray-600-tk border-gray-600-tk cursor-pointer border-b bg-gray-700-tk px-0.5 py-0.5 text-md font-semi-bold text-gray-100-tk last:border-b-0"
                   >
-                    Criar nova tag: {inputValue}
+                    {suggestion}
                   </div>
-                ) : null}
+                ))
+              ) : inputValue.trim() ? (
+                <div
+                  onClick={() => addTag(inputValue)}
+                  className="hover:bg-gray-600-tk cursor-pointer bg-gray-700-tk px-0.5 py-0.5 text-md font-semi-bold text-gray-100-tk"
+                >
+                  Criar nova tag: {inputValue}
+                </div>
+              ) : null}
             </div>
           )}
         </div>
-        
-        <div className={`flex flex-wrap gap-0.5 ${tags.length > 0 ? "p-0.5" : ""}`}>
+
+        <div
+          className={`flex flex-wrap gap-0.5 ${tags.length > 0 ? "p-0.5" : ""}`}
+        >
           {tags.map((tag) => (
-            <div 
-              key={tag} 
-              className="inline-flex items-center gap-0.5 px-0.5 py-0.25 rounded-md bg-gray-500-tk text-gray-100-tk"
+            <div
+              key={tag}
+              className="py-0.25 inline-flex items-center gap-0.5 rounded-md bg-gray-500-tk px-0.5 text-gray-100-tk"
             >
               <span className="text-md font-semi-bold">{tag}</span>
               <button
