@@ -1,5 +1,4 @@
-
-// import axios from 'axios'
+// import api from '@/shared/infra/services/api'
 // import { SIEHPConfig } from "@/shared/config/siehpConfig";
 import { GetExampleParamsDTO, GetExampleResponseDTO, GetExampleResponseSchema } from "@/shared/domain/dtos";
 import { ExampleError } from "@/shared/domain/errors";
@@ -11,7 +10,7 @@ export class RemoteExample implements Example {
   async getExample({
     example,
   }: GetExampleParamsDTO): Promise<GetExampleResponseDTO> {
-    // const httpResponse = await axios.post<GetExampleResponseDTO>(`${SIEHPConfig.API_URL}/example/${example}`)
+    // const httpResponse = await api.post<GetExampleResponseDTO>(`/example/${example}`)
     // fingindo requisição
     const httpResponse = {
       data: {

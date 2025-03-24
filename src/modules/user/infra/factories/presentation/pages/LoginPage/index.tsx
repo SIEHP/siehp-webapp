@@ -38,8 +38,12 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    if (auth) {
+    if (auth?.user.role === "ADMIN") {
       router.push("/admin/professores");
+    } else if (auth?.user.role === "PROFESSOR") {
+      router.push("/professor/banco-de-imagens");
+    } else if (auth?.user.role === "STUDENT") {
+      router.push("/aluno/dashboard");
     }
   }, [auth]);
 

@@ -3,7 +3,7 @@ import { z } from "zod";
 export const UserSchema = z.object({
   id: z.number().int().positive(),
   name: z.string(),
-  role: z.string(),
+  role: z.enum(["ADMIN", "PROFESSOR", "STUDENT"]),
   imageProfileUrl: z.string().optional().nullable(),
 });
 
