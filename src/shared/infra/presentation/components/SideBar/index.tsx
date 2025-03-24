@@ -11,7 +11,6 @@ import { ChevronArrowIcon } from "../Icons";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "../Avatar/avatar";
 import { UserIcon } from "../Icons";
 
 const SideBarRoot = ({ children }: SideBarRootProps) => {
@@ -48,7 +47,7 @@ const SideBarRoot = ({ children }: SideBarRootProps) => {
         </svg>
       </button>
       <aside
-        className={`absolute left-0 top-0 z-10 max-h-dvh h-dvh min-w-[380px] flex-col items-center justify-between bg-gray-700 pt-4 transition-all lg:relative flex lg:translate-x-0 ${
+        className={`absolute left-0 top-0 z-10 flex h-dvh max-h-dvh min-w-[380px] flex-col items-center justify-between bg-gray-700 pt-4 transition-all lg:relative lg:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -130,18 +129,18 @@ const SideBarItem = ({ Icon, title, subItems }: SideBarItemProps) => {
 const SideBarFooter = ({ userName, userRole }: SideBarFooterProps) => {
   return (
     <div
-      className={`flex flex-col w-full p-2 gap-2 shadow-[rgba(0,_0,_0,_0.25)_0px_-0.5rem_0.5rem_0px]`}
+      className={`flex w-full flex-col gap-2 p-2 shadow-[rgba(0,_0,_0,_0.25)_0px_-0.5rem_0.5rem_0px]`}
     >
       <div className="flex items-center justify-start gap-1">
         <div>
-          <UserIcon className="w-[100px] h-[100px]"/>
+          <UserIcon className="h-[100px] w-[100px]" />
         </div>
         <div className="text-gray-900-tk">
           <p className="text-lg font-semi-bold">{userName}</p>
           <p className="text-md font-regular">{userRole}</p>
         </div>
       </div>
-      
+
       <div className="flex items-center justify-start">
         <Link href="#" className="text-lg font-semi-bold text-gray-700-tk">
           Ajuda

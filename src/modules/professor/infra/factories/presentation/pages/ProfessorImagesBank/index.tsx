@@ -2,8 +2,6 @@
 
 import { AdminPagesHeader } from "@/shared/infra/presentation/components/AdminPagesHeader";
 import { CustomDataField } from "@/shared/infra/presentation/components/CustomDataField";
-import dividerImg from "@/shared/infra/presentation/assets/images/divider.svg";
-import Image from "next/image";
 
 const ProfessorImagesBankPage = ({}) => {
   return (
