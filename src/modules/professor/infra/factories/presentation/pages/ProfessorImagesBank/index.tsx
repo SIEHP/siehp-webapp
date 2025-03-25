@@ -1,52 +1,63 @@
 "use client";
 
+import { useState } from "react";
 import { AdminPagesHeader } from "@/shared/infra/presentation/components/AdminPagesHeader";
 import { CustomDataField } from "@/shared/infra/presentation/components/CustomDataField";
-import { useState, ChangeEvent } from "react";
+import { ImageBankItem } from "@/shared/infra/presentation/components/ImageBankIten";
+import {
+  EditImageFieldsModal,
+  ImageData,
+} from "@/shared/infra/presentation/components/EditImageFieldsModal";
+import gettyimages1333715238612x612 from "@/shared/infra/presentation/components/ImageBankIten/gettyimages-1333715238-612x612.jpg";
+import { ViewImageModal } from "@/shared/infra/presentation/components/ViewImageModal";
 
 const ProfessorImagesBankPage = ({}) => {
-  // Estados para cada campo de filtro
-  const [direitosImagem, setDireitosImagem] = useState("");
-  const [tecidoOrgao, setTecidoOrgao] = useState("");
-  const [estadoPeca, setEstadoPeca] = useState("");
-  const [dataCadastro, setDataCadastro] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<ImageData>({
+    // Dados da imagem que serão editados
+    direitosImagem: "Licença CC",
+    tecidoOrgao: "Epitélio",
+    estadoPeca: "Conservada",
+    dataCadastro: "01/01/2023",
+    tituloImagem: "Lâmina de Exemplo 1",
+    descricaoImagem: "Lâmina de epitélio utilizada para estudo",
+    tags: ["epitélio", "lâmina", "microscópio"],
+  });
 
-  // Estado para forçar a recriação dos componentes
-  const [resetKey, setResetKey] = useState(0);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
 
-  // Função para limpar todos os filtros
-  const limparFiltros = () => {
-    // Resetar estados
-    setDireitosImagem("");
-    setTecidoOrgao("");
-    setEstadoPeca("");
-    setDataCadastro("");
-    setTags([]);
-
-    // Incrementar o resetKey para forçar a recriação dos componentes
-    setResetKey((prev) => prev + 1);
+  const handleOpenViewModal = () => {
+    setIsViewModalOpen(true);
   };
 
-  // Manipuladores de eventos
-  const handleDireitosImagemChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setDireitosImagem(e.target.value);
+  const handleCloseViewModal = () => {
+    setIsViewModalOpen(false);
   };
 
-  const handleTecidoOrgaoChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setTecidoOrgao(e.target.value);
+  const handleOpenEditModal = () => {
+    setIsModalOpen(true);
   };
 
-  const handleEstadoPecaChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setEstadoPeca(e.target.value);
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
 
-  const handleDataCadastroChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setDataCadastro(e.target.value);
+  const handleConfirmEdit = () => {
+    // Aqui seria implementada a lógica para salvar as alterações no backend
+    console.log("Dados confirmados:", selectedImage);
+    setIsModalOpen(false);
+    // Aqui poderia ter um feedback visual de sucesso
+  };
+
+  // Função para atualizar os dados da imagem quando editados no modal
+  const handleUpdateImageData = (updatedData: ImageData) => {
+    setSelectedImage(updatedData);
+    console.log("Imagem atualizada:", updatedData);
+    handleConfirmEdit();
   };
 
   return (
-    <div className="flex h-full w-full flex-col items-center gap-1 p-4">
+    <div className="flex h-full w-full flex-col items-center gap-1 overflow-y-auto p-4">
       <AdminPagesHeader.Root className="w-full">
         <AdminPagesHeader.Title>Filtros:</AdminPagesHeader.Title>
         <AdminPagesHeader.Body>
@@ -118,6 +129,31 @@ const ProfessorImagesBankPage = ({}) => {
           Filtrar imagens
         </button>
       </div>
+      <hr className="w-full rounded-full border-[2px] border-[#7C7C7C]" />
+
+      <div>
+        <ImageBankItem
+          imageUrl={gettyimages1333715238612x612.src}
+          title={selectedImage.tituloImagem || ""}
+          onEdit={handleOpenEditModal}
+          onView={handleOpenViewModal}
+          onMore={() => {}}
+        />
+      </div>
+
+      <EditImageFieldsModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onConfirm={handleUpdateImageData}
+        imagePreviewUrl={gettyimages1333715238612x612.src}
+        imageData={selectedImage}
+      />
+
+      <ViewImageModal
+        isOpen={isViewModalOpen}
+        onClose={handleCloseViewModal}
+        imageUrl={gettyimages1333715238612x612.src}
+      />
     </div>
   );
 };

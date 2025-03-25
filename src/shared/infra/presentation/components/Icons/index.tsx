@@ -12,6 +12,9 @@ import { default as TopDownArrowIcon } from "@/shared/infra/presentation/assets/
 import { default as ThreeDotsIcon } from "@/shared/infra/presentation/assets/images/three_dots_icon.svg";
 import { default as ImageIcon } from "@/shared/infra/presentation/assets/images/image_icon.svg";
 import { default as UserIcon } from "@/shared/infra/presentation/assets/images/user_default_avatar.svg";
+import { default as ImagePencilButtonIcon } from "@/shared/infra/presentation/assets/images/image_pencil_button_icon.svg";
+import { default as ImageEyeButtonIcon } from "@/shared/infra/presentation/assets/images/image_eye_button_icon.svg";
+import { default as XIcon } from "@/shared/infra/presentation/assets/images/x_icon.svg";
 import { default as PencilIcon } from "@/shared/infra/presentation/assets/images/pencil_icon.svg";
 import { default as LogoutIcon } from "@/shared/infra/presentation/assets/images/logout_icon.svg";
 
@@ -30,6 +33,9 @@ export {
   ThreeDotsIcon,
   ImageIcon,
   UserIcon,
+  ImagePencilButtonIcon,
+  ImageEyeButtonIcon,
+  XIcon,
   PencilIcon,
   LogoutIcon,
 };
