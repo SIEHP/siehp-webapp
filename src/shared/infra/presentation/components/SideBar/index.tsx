@@ -11,7 +11,7 @@ import { ChevronArrowIcon } from "../Icons";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { UserIcon } from "../Icons";
+import { UserIcon, PencilIcon, LogoutIcon } from "../Icons";
 
 const SideBarRoot = ({ children }: SideBarRootProps) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -127,13 +127,60 @@ const SideBarItem = ({ Icon, title, subItems }: SideBarItemProps) => {
 };
 
 const SideBarFooter = ({ userName, userRole }: SideBarFooterProps) => {
+  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
+
+  const handleProfileImageSelect = (file: File | null) => {
+    // Aqui vamos precisar de um setValue do hook form, então vamos usar uma implementação adaptada
+    // que só trabalha com a parte de preview da imagem
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        const base64data = reader.result as string;
+        setProfileImageUrl(base64data);
+      };
+    } else {
+      setProfileImageUrl(null);
+    }
+  };
+
   return (
     <div
       className={`flex w-full flex-col gap-2 p-2 shadow-[rgba(0,_0,_0,_0.25)_0px_-0.5rem_0.5rem_0px]`}
     >
       <div className="flex items-center justify-start gap-1">
-        <div>
-          <UserIcon className="h-[100px] w-[100px]" />
+        <div
+          className="relative cursor-pointer transition-all duration-200 hover:opacity-80"
+          onClick={() => {
+            // Simulando um clique em um input de arquivo
+            const input = document.createElement("input");
+            input.type = "file";
+            input.accept = "image/*";
+            input.onchange = (e) => {
+              const file = (e.target as HTMLInputElement).files?.[0];
+              if (file) {
+                handleProfileImageSelect(file);
+              }
+            };
+            input.click();
+          }}
+        >
+          {/* TODO: Implementar para puxar a imagem do usuário */}
+          {profileImageUrl ? (
+            <div className="relative h-[100px] w-[100px] overflow-hidden rounded-full">
+              <Image
+                src={profileImageUrl}
+                alt="Imagem de perfil"
+                fill
+                className="object-cover"
+              />
+            </div>
+          ) : (
+            <UserIcon className="h-[100px] w-[100px]" />
+          )}
+          <div className="absolute left-0 top-0">
+            <PencilIcon className="h-[24px] w-[24px]" />
+          </div>
         </div>
         <div className="text-gray-900-tk">
           <p className="text-lg font-semi-bold">{userName}</p>
@@ -142,9 +189,16 @@ const SideBarFooter = ({ userName, userRole }: SideBarFooterProps) => {
       </div>
 
       <div className="flex items-center justify-start">
-        <Link href="#" className="text-lg font-semi-bold text-gray-700-tk">
+        <button
+          className="flex items-center justify-center gap-0.5 rounded-md bg-fail p-0.5"
+          onClick={() => {}}
+        >
+          <LogoutIcon className="h-[24px] w-[24px]  text-gray-900-tk" />
+          <p className="text-md font-semi-bold text-gray-900-tk">Sair</p>
+        </button>
+        {/* <Link href="#" className="text-lg font-semi-bold text-gray-700-tk">
           Ajuda
-        </Link>
+        </Link> */}
       </div>
     </div>
   );

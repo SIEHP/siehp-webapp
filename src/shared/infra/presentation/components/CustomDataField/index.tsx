@@ -42,7 +42,7 @@ const CustomDataFieldContent = ({
   ...props
 }: DataFieldContentProps) => {
   return (
-    <div className={`flex text-lg ${className ?? ""}`} {...props}>
+    <div className={`flex text-md ${className ?? ""}`} {...props}>
       {children}
     </div>
   );

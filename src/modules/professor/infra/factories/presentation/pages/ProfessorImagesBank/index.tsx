@@ -68,37 +68,66 @@ const ProfessorImagesBankPage = ({}) => {
         <CustomDataField.Root className="md:w-[300px]">
           <CustomDataField.Title>Direitos de imagem: </CustomDataField.Title>
           <CustomDataField.Content>
-            <CustomDataField.Text className="sm:w-[260px] md:w-[300px]" />
+            <CustomDataField.Text
+              key={`direitos-imagem-${resetKey}`}
+              className="sm:w-[260px] md:w-[300px]"
+              onChange={handleDireitosImagemChange}
+              defaultValue=""
+            />
           </CustomDataField.Content>
         </CustomDataField.Root>
         <CustomDataField.Root className="md:w-[300px]">
           <CustomDataField.Title>Tecido/Orgão: </CustomDataField.Title>
           <CustomDataField.Content>
-            <CustomDataField.Text className="sm:w-[260px] md:w-[300px]" />
+            <CustomDataField.Text
+              key={`tecido-orgao-${resetKey}`}
+              className="sm:w-[260px] md:w-[300px]"
+              onChange={handleTecidoOrgaoChange}
+              defaultValue=""
+            />
           </CustomDataField.Content>
         </CustomDataField.Root>
         <CustomDataField.Root className="md:w-[300px]">
           <CustomDataField.Title>Estado da Peça: </CustomDataField.Title>
           <CustomDataField.Content>
-            <CustomDataField.Text className="sm:w-[260px] md:w-[300px]" />
+            <CustomDataField.Text
+              key={`estado-peca-${resetKey}`}
+              className="sm:w-[260px] md:w-[300px]"
+              onChange={handleEstadoPecaChange}
+              defaultValue=""
+            />
           </CustomDataField.Content>
         </CustomDataField.Root>
         <CustomDataField.Root className="md:w-[300px]">
           <CustomDataField.Title>Data de cadastro:</CustomDataField.Title>
           <CustomDataField.Content>
-            <CustomDataField.Date className="sm:w-[260px] md:w-[300px]" />
+            <CustomDataField.Date
+              key={`data-cadastro-${resetKey}`}
+              className="sm:w-[260px] md:w-[300px]"
+              onChange={handleDataCadastroChange}
+              defaultValue=""
+            />
           </CustomDataField.Content>
         </CustomDataField.Root>
         <CustomDataField.Root className="w-full">
           <CustomDataField.Title>Tags:</CustomDataField.Title>
           <CustomDataField.Content>
-            <CustomDataField.Tag className="w-full" />
+            <CustomDataField.Tag
+              key={`tags-${resetKey}`}
+              className="w-full"
+              initialTags={tags}
+              onTagsChange={setTags}
+            />
           </CustomDataField.Content>
         </CustomDataField.Root>
       </div>
       <div className="flex w-full flex-col items-center justify-between gap-1 sm:flex-row [&>button]:rounded-lg [&>button]:px-2 [&>button]:py-1 [&>button]:text-gray-100-tk">
-        <button className="bg-fail">Limpar filtros</button>
-        <button className="bg-sucess">Filtrar imagens</button>
+        <button className="bg-fail" onClick={limparFiltros}>
+          Limpar filtros
+        </button>
+        <button className="bg-sucess" onClick={() => {}}>
+          Filtrar imagens
+        </button>
       </div>
       <hr className="w-full rounded-full border-[2px] border-[#7C7C7C]" />
 

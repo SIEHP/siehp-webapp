@@ -67,7 +67,7 @@ const CustomTableFooter = ({
 const CustomTableRow = ({ children, className, ...props }: TableRowProps) => {
   return (
     <tr 
-      className={` flex flex-wrap border-b transition-colors ${className ?? ""}`}
+      className={`border-b transition-colors hover:bg-gray-50 ${className ?? ""}`}
       {...props}
     >
       {children}
@@ -75,25 +75,24 @@ const CustomTableRow = ({ children, className, ...props }: TableRowProps) => {
   );
 };
 
-const CustomTableHead = ({ children, className, ...props }: TableHeadProps) => {
+const CustomTableHead = ({ children, className, hasFilter = false, ...props }: TableHeadProps) => {
   return (
-  
-      <th 
-        className={`flex flex-row text-left text-[1rem] font-regular text-gray-900 ml-[30px] ${className ?? ""}`}
-        {...props}
-      >
+    <th 
+      className={`h-12 text-left align-middle text-md font-medium text-gray-900 ${className ?? ""}`}
+      {...props}
+    >
+      <div className="flex items-center gap-0.5">
         {children}
-        <TopDownArrowIcon  onClick={() => {}} />
-      </th>
-      
-
+        {hasFilter && children && <TopDownArrowIcon className="cursor-pointer" onClick={() => {}} />}
+      </div>
+    </th>
   );
 };
 
 const CustomTableCell = ({ children, className, ...props }: TableCellProps) => {
   return (
     <td 
-      className={`text-regular py-2 text-left align-middle text-[1rem] text-gray-900 ${className ?? ""}`}
+      className={`h-12 align-middle text-md text-gray-900 ${className ?? ""}`}
       {...props}
     >
       {children}
@@ -108,14 +107,16 @@ const CustomTableCellStatus = ({
   ...props
 }: TableCellStatusProps) => {
   return (
-    <div  className={` ${className ?? ""}`}>
+    <td className={`h-12 align-middle ${className ?? ""}`}>
       <div 
-        className={`py-0.25  my-1.5 h-[1.75rem] min-w-[67px] w-min items-center justify-center rounded-[0.25rem] border-[2px] bg-gray-100- px-0.5 text-center text-[1rem] text-gray-900 border-sucess`}
+        className={`inline-flex px-1 py-0.25 rounded-[0.25rem] border-[2px] text-md text-gray-900 ${
+          status === "ACTIVE" ? "border-sucess" : "border-error"
+        }`}
         {...props}
       >
         {children}
       </div>
-    </div>
+    </td>
   );
 };
 
@@ -125,20 +126,24 @@ const CustomTableCellButton = ({
   ...props
 }: TableCellButtonProps) => {
   return (
-    <button 
-      className={` mx-1.5 my-1 h-2.5 w-auto items-center justify-center rounded-[0.25rem] bg-gray-700- px-1.5 py-0.5 text-[1rem] font-regular text-gray-900 ${className ?? ""}`}
-      {...props}
-    >
-      {children}
-    </button>
+    <td className="h-12 align-middle">
+      <button 
+        className={`inline-flex items-center justify-center rounded-[0.25rem] bg-gray-700 px-1 py-0.5 text-md font-light text-gray-100 hover:bg-gray-600 ${className ?? ""}`}
+        {...props}
+      >
+        {children}
+      </button>
+    </td>
   );
 };
 
 const CustomTableCellMenu = ({ className, ...props }: TableCellMenuProps) => {
   return (
-    <div className={`mx-1.5 my-1.5 h-1 w-1 ${className ?? ""}`} {...props}>
-      <ThreeDotsIcon width={16} height={16} viewBox="0 0 16 16" />
-    </div>
+    <td className="h-12 align-middle text-center">
+      <button type="button" className={`inline-flex items-center justify-center hover:bg-gray-100 rounded-full p-1 ${className ?? ""}`}>
+        <ThreeDotsIcon width={16} height={16} />
+      </button>
+    </td>
   );
 };
 
