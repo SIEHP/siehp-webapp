@@ -26,7 +26,8 @@ export const PAGES: {
 };
 
 export const LANDING_PAGE_NAVBAR_LINKS: (keyof typeof PagesEnum)[] = [
-  // "HELP",
-  // "HOME_PAGE",
-  // "ADD_IMAGES",
+  "HELP",
+  "HOME_PAGE",
+  "ADD_IMAGE",
+  "IMAGES_BANK",
 ];
