@@ -17,7 +17,7 @@ const AdminPagesHeaderRoot = ({
 }: AdminPagesHeaderRootProps) => {
   return (
     <div
-      className={`w-100% flex h-2.5 flex-wrap content-center items-center ${className ?? ""}`}
+      className={`w-100% flex ${className ?? ""}`}
       {...props}
     >
       {children}
@@ -47,7 +47,7 @@ const AdminPagesHeaderBody = ({
 }: AdminPagesHeaderBodyProps) => {
   return (
     <div
-      className={`flex flex-grow items-center justify-end ${className ?? ""}`}
+      className={`flex  items-start ${className ?? ""}`}
       {...props}
     >
       {children}
@@ -61,7 +61,7 @@ const AdminPagesHeaderButtonContent = ({
   ...props
 }: AdminPagesHeaderButtonContentProps) => {
   return (
-    <div className={`flex flex-wrap ${className ?? ""}`} {...props}>
+    <div className={`flex ${className ?? ""}`} {...props}>
       {children}
     </div>
   );
@@ -73,7 +73,7 @@ const AdminPagesHeaderButton = ({
   ...props
 }: AdminPagesHeaderButtonProps) => {
   return (
-    <button className={`mr-4 ${className ?? ""}`} {...props}>
+    <button className={` ${className ?? ""}`} {...props}>
       {children}
     </button>
   );
@@ -85,7 +85,7 @@ const AdminPagesHeaderButtonIcon = ({
   ...props
 }: AdminPagesHeaderButtonIconProps) => {
   return (
-    <div className={`mr-1 h-[1.125rem] w-1  ${className ?? ""}`} {...props}>
+    <div className={`  ${className ?? ""}`} {...props}>
       {children}
     </div>
   );

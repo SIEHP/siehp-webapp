@@ -27,6 +27,7 @@ export interface TableRowProps
 export interface TableHeadProps
   extends React.ThHTMLAttributes<HTMLTableCellElement> {
   children: React.ReactNode;
+  hasFilter?: boolean;
 }
 
 export interface TableCellProps
