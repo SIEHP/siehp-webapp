@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
+
 interface IImageCreateValidationModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -25,7 +26,6 @@ export function ImageCreateValidationModal({
   imageData,
 }: IImageCreateValidationModalProps) {
   const modalRef = React.useRef<HTMLDivElement>(null);
-
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       onClose(); // Fecha o modal se clicar fora dele

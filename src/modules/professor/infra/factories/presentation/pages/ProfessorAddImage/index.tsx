@@ -11,11 +11,13 @@ import {
   professorAddImageSchema,
 } from "./validation";
 import { handleImageSelect as imageSelectHandler } from "@/shared/infra/utils/functions/image-picker";
+import useImage from "@/modules/image/infra/services/hooks/useImage";
 
 const ProfessorAddImagePage = () => {
   const [openValidationModal, setOpenValidationModal] =
     useState<boolean>(false);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
+  const { createImage } = useImage();
 
   const {
     control,
@@ -46,9 +48,50 @@ const ProfessorAddImagePage = () => {
     setOpenValidationModal(false);
   };
 
-  const handleConfirmValidation = () => {
-    // Por enquanto não faz nada, conforme solicitado
+  const handleConfirmValidation = async () => {
     setOpenValidationModal(false);
+    
+    if (formData.imageFile) {
+      try {
+        // Criar um FormData para enviar o arquivo
+        const fileData = new FormData();
+        fileData.append('file', formData.imageFile);
+        
+        // Gerar um nome de arquivo único baseado no timestamp e título
+        const timestamp = new Date().getTime();
+        const fileName = `${timestamp}-${formData.tituloImagem.replace(/\s+/g, '-').toLowerCase()}`;
+        const fileExtension = formData.imageFile.name.split('.').pop();
+        const fullFileName = `${fileName}.${fileExtension}`;
+        
+        // Enviar a imagem para o servidor
+        const response = await fetch('/api/upload-image', {
+          method: 'POST',
+          body: fileData,
+          headers: {
+            'x-file-name': fullFileName,
+          },
+        });
+        
+        if (!response.ok) {
+          throw new Error('Falha ao enviar a imagem');
+        }
+        
+        // Obter a URL da imagem retornada pela API
+        const data = await response.json();
+        const imageUrl = data.url;
+        
+        // Agora usamos a URL gerada no createImage
+        createImage.handleCreateImage({ 
+          title: formData.tituloImagem, 
+          url: imageUrl, 
+          tags: formData.tags 
+        });
+        
+      } catch (error) {
+        console.error('Erro ao salvar a imagem:', error);
+        // Aqui você pode adicionar algum feedback visual para o usuário
+      }
+    }
   };
 
   const handleImageSelect = (file: File | null) => {
