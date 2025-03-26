@@ -6,22 +6,27 @@ export const PAGES: {
   HOME_PAGE: {
     label: "Home",
     link: "/",
+    someNeededPermissions: [],
   },
   HELP: {
     label: "Ajuda",
     link: "/help",
+    someNeededPermissions: [],
   },
-  ADMIN: {
-    label: "Administração",
-    link: "/admin",
+  MANAGE_PROFESSORS: {
+    label: "Gerenciar Professores",
+    link: "/admin/professores",
+    someNeededPermissions: ["MANTER_PROFESSORES"],
   },
   ADD_IMAGE: {
     label: "Adicionar Imagem",
     link: "/professor/addImage",
+    someNeededPermissions: ["MANTER_IMAGENS"],
   },
   IMAGES_BANK: {
     label: "Banco de Imagens",
     link: "/professor/imagesBank",
+    someNeededPermissions: ["ACESSAR_IMAGENS"],
   },
 };
 

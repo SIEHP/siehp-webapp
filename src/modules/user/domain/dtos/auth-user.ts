@@ -12,8 +12,6 @@ export const AuthUserResponseSchema = AuthSchema;
 
 export type AuthUserResponseDTO = z.infer<typeof AuthUserResponseSchema>;
 
-export const ValidateAccessTokenResponseSchema = z.object({
-  isValid: z.boolean(),
-});
+export const RefreshAccessTokenResponseSchema = AuthSchema;
 
-export type ValidateAccessTokenResponseDTO = z.infer<typeof ValidateAccessTokenResponseSchema>;
+export type RefreshAccessTokenResponseDTO = z.infer<typeof RefreshAccessTokenResponseSchema>;

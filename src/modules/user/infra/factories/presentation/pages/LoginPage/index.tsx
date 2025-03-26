@@ -8,6 +8,7 @@ import { LoginFormData } from "./validation";
 import { loginSchema } from "./validation";
 import { useAuth } from "@/modules/user/infra/services/hooks/useAuth";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 
 const LoginPage = () => {
@@ -119,9 +120,13 @@ const LoginPage = () => {
                  disabled={login.isPending}
                 />
               </Form.Control>
-              <a href="" className="mt-[7px] font-regular text-gray-900-tk">
+              <button
+                type="button"
+                onClick={() => router.push('/esqueci-minha-senha')}
+                className="mt-[7px] font-regular text-gray-900-tk hover:underline"
+              >
                 Esqueci minha senha
-              </a>
+              </button>
               {errors.password && (
                 <p className="absolute w-max text-right text-md text-fail opacity-[0.8]" style={{ bottom: 0, right: 0 }}>
                   {errors.password.message}

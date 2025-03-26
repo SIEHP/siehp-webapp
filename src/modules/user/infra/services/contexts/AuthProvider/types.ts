@@ -9,6 +9,12 @@ export interface AuthContextData {
     data: any;
   };
   auth: Auth | null;
+  logout: {
+    handleLogout: () => Promise<void>;
+  };
+  refreshAccessToken: {
+    handleRefreshAccessToken: () => Promise<void>;
+  };
 }
 
 export interface AuthProviderProps {

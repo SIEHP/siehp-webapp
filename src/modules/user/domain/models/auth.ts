@@ -5,6 +5,7 @@ export const UserSchema = z.object({
   name: z.string(),
   role: z.enum(["ADMIN", "PROFESSOR", "STUDENT"]),
   imageProfileUrl: z.string().optional().nullable(),
+  permissions: z.array(z.string()),
 });
 
 export type User = z.infer<typeof UserSchema>;

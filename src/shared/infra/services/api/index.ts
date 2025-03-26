@@ -22,6 +22,8 @@ api.interceptors.request.use((config) => {
     } catch (error) {
       console.error("Erro ao processar token de autenticação:", error);
     }
+  } else {
+   delete config.headers.Authorization; 
   }
   
   return config;

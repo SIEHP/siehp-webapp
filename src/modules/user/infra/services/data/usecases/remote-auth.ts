@@ -3,8 +3,8 @@ import {
   AuthUserParamsDTO,
   AuthUserResponseDTO,
   AuthUserResponseSchema,
-  ValidateAccessTokenResponseDTO,
-  ValidateAccessTokenResponseSchema,
+  RefreshAccessTokenResponseDTO,
+  RefreshAccessTokenResponseSchema,
 } from "@/modules/user/domain/dtos";
 import { Auth } from "@/modules/user/domain/usecases";
 import { SIEHPConfig } from "@/shared/config/siehpConfig";
@@ -39,14 +39,14 @@ export class RemoteAuth implements Auth {
     return httpResponse.data as AuthModel;
   }
 
-  async validateAccessToken(): Promise<ValidateAccessTokenResponseDTO> {
-    const httpResponse = await api.get<ValidateAccessTokenResponseDTO>(
-      `/user/validate-access-token`,
+  async refreshAccessToken(): Promise<RefreshAccessTokenResponseDTO> {
+    const httpResponse = await api.get<RefreshAccessTokenResponseDTO>(
+      `/user/refresh-access-token`,
     );
 
     const error = checkApiError({
       data: httpResponse.data,
-      schema: ValidateAccessTokenResponseSchema,
+      schema: RefreshAccessTokenResponseSchema,
     });
 
     if (error) {
