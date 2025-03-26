@@ -1,5 +1,4 @@
 import api from "@/shared/infra/services/api";
-import { SIEHPConfig } from "@/shared/config/siehpConfig";
 import { checkApiError } from "@/shared/infra/utils/functions/check-api-error";
 import { ApiError } from "@/shared/domain/models/error";
 import { InviteProfessorParamsDTO, InviteProfessorResponseDTO, InviteProfessorResponseSchema } from "@/modules/user/domain/dtos/invite-professor";
