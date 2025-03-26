@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
 import {
   ImageBankItemProps,
@@ -14,6 +14,7 @@ import {
   ThreeDotsIcon,
 } from "../Icons";
 import { ViewImageModal } from "../ViewImageModal";
+import { AlertDialog } from "../AlertDialog";
 
 export function ImageBankItem({
   imageUrl,
@@ -24,11 +25,45 @@ export function ImageBankItem({
   onMore,
 }: ImageBankItemProps) {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleViewClick = () => {
     setIsViewModalOpen(true);
     if (onView) onView();
   };
+
+  const handleMoreClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsDropdownOpen(prev => !prev);
+    if (onMore) onMore();
+  };
+
+  const handleDeleteClick = () => {
+    setIsDropdownOpen(false);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    // Aqui seria implementada a lógica de exclusão
+    console.log("Imagem excluída:", title);
+    setIsDeleteDialogOpen(false);
+  };
+
+  // Close dropdown when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
@@ -67,23 +102,67 @@ export function ImageBankItem({
               <ImageEyeButtonIcon className="h-[36px] w-[36px]" />
             </button>
 
-            <button
-              onClick={onMore}
-              className="flex h-[52px] w-[52px] items-center justify-center rounded-lg bg-gray-300-tk"
-              title="Mais opções"
-            >
-              <ThreeDotsIcon className="h-[36px] w-[36px] fill-gray-100" />
-            </button>
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={handleMoreClick}
+                className="flex h-[52px] w-[52px] items-center justify-center rounded-lg bg-gray-300-tk"
+                title="Mais opções"
+              >
+                <ThreeDotsIcon className="h-[36px] w-[36px] fill-gray-900-tk" />
+              </button>
+              
+              {/* Dropdown menu */}
+              {isDropdownOpen && (
+                <div className="absolute right-0 w-36 rounded-md shadow-lg bg-gray-500-tk z-10">
+                  
+                    <button
+                      onClick={handleDeleteClick}
+                      className="w-full px-1 py-0.5 text-sm text-left text-gray-900-tk hover:bg-gray-400-tk"
+                    >
+                      Excluir
+                    </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
+      {/* View Image Modal */}
       <ViewImageModal
         isOpen={isViewModalOpen}
         onClose={() => setIsViewModalOpen(false)}
         imageUrl={imageUrl}
         imageAlt={title}
       />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog.Root open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialog.Portal>
+          <AlertDialog.Overlay />
+          <AlertDialog.Content>
+            <AlertDialog.Title>Confirmar exclusão</AlertDialog.Title>
+            <AlertDialog.Description className="text-gray-100-tk">
+              Tem certeza que deseja excluir esta imagem? Esta ação não pode ser desfeita.
+            </AlertDialog.Description>
+            <div className="flex justify-between gap-2 mt-1">
+              <AlertDialog.Cancel asChild>
+                <button className="px-1 py-1 rounded-md bg-fail text-gray-100-tk hover:bg-gray-400-tk font-regular">
+                  Cancelar
+                </button>
+              </AlertDialog.Cancel>
+              <AlertDialog.Action asChild>
+                <button 
+                  className="px-1 py-1 rounded-md bg-sucess text-gray-100-tk hover:bg-opacity-90 font-regular"
+                  onClick={handleDeleteConfirm}
+                >
+                  Excluir
+                </button>
+              </AlertDialog.Action>
+            </div>
+          </AlertDialog.Content>
+        </AlertDialog.Portal>
+      </AlertDialog.Root>
     </>
   );
 }
