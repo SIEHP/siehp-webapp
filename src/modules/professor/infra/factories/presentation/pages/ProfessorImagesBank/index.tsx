@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AdminPagesHeader } from "@/shared/infra/presentation/components/AdminPagesHeader";
+import { ProfessorPagesHeader } from "@/shared/infra/presentation/components/ProfessorPagesHeader";
 import { CustomDataField } from "@/shared/infra/presentation/components/CustomDataField";
 import { ImageBankItem } from "@/shared/infra/presentation/components/ImageBankIten";
 import {
@@ -58,76 +58,47 @@ const ProfessorImagesBankPage = ({}) => {
 
   return (
     <div className="flex h-full w-full flex-col items-center gap-1 overflow-y-auto p-4">
-      <AdminPagesHeader.Root className="w-full">
-        <AdminPagesHeader.Title>Filtros:</AdminPagesHeader.Title>
-        <AdminPagesHeader.Body>
-          <AdminPagesHeader.Filter />
-        </AdminPagesHeader.Body>
-      </AdminPagesHeader.Root>
+      <ProfessorPagesHeader.Root>
+        <ProfessorPagesHeader.Title>Filtros:</ProfessorPagesHeader.Title>
+        <ProfessorPagesHeader.Body className="w-full justify-start xl:justify-end">
+          <ProfessorPagesHeader.Filter />
+        </ProfessorPagesHeader.Body>
+      </ProfessorPagesHeader.Root>
       <div className="flex w-full flex-wrap justify-between gap-1">
         <CustomDataField.Root className="md:w-[300px]">
           <CustomDataField.Title>Direitos de imagem: </CustomDataField.Title>
           <CustomDataField.Content>
-            <CustomDataField.Text
-              key={`direitos-imagem-${resetKey}`}
-              className="sm:w-[260px] md:w-[300px]"
-              onChange={handleDireitosImagemChange}
-              defaultValue=""
-            />
+            <CustomDataField.Text className="sm:w-[260px] md:w-[300px]" />
           </CustomDataField.Content>
         </CustomDataField.Root>
         <CustomDataField.Root className="md:w-[300px]">
           <CustomDataField.Title>Tecido/Orgão: </CustomDataField.Title>
           <CustomDataField.Content>
-            <CustomDataField.Text
-              key={`tecido-orgao-${resetKey}`}
-              className="sm:w-[260px] md:w-[300px]"
-              onChange={handleTecidoOrgaoChange}
-              defaultValue=""
-            />
+            <CustomDataField.Text className="sm:w-[260px] md:w-[300px]" />
           </CustomDataField.Content>
         </CustomDataField.Root>
         <CustomDataField.Root className="md:w-[300px]">
           <CustomDataField.Title>Estado da Peça: </CustomDataField.Title>
           <CustomDataField.Content>
-            <CustomDataField.Text
-              key={`estado-peca-${resetKey}`}
-              className="sm:w-[260px] md:w-[300px]"
-              onChange={handleEstadoPecaChange}
-              defaultValue=""
-            />
+            <CustomDataField.Text className="sm:w-[260px] md:w-[300px]" />
           </CustomDataField.Content>
         </CustomDataField.Root>
         <CustomDataField.Root className="md:w-[300px]">
           <CustomDataField.Title>Data de cadastro:</CustomDataField.Title>
           <CustomDataField.Content>
-            <CustomDataField.Date
-              key={`data-cadastro-${resetKey}`}
-              className="sm:w-[260px] md:w-[300px]"
-              onChange={handleDataCadastroChange}
-              defaultValue=""
-            />
+            <CustomDataField.Date className="sm:w-[260px] md:w-[300px]" />
           </CustomDataField.Content>
         </CustomDataField.Root>
         <CustomDataField.Root className="w-full">
           <CustomDataField.Title>Tags:</CustomDataField.Title>
           <CustomDataField.Content>
-            <CustomDataField.Tag
-              key={`tags-${resetKey}`}
-              className="w-full"
-              initialTags={tags}
-              onTagsChange={setTags}
-            />
+            <CustomDataField.Tag className="w-full" />
           </CustomDataField.Content>
         </CustomDataField.Root>
       </div>
       <div className="flex w-full flex-col items-center justify-between gap-1 sm:flex-row [&>button]:rounded-lg [&>button]:px-2 [&>button]:py-1 [&>button]:text-gray-100-tk">
-        <button className="bg-fail" onClick={limparFiltros}>
-          Limpar filtros
-        </button>
-        <button className="bg-sucess" onClick={() => {}}>
-          Filtrar imagens
-        </button>
+        <button className="bg-fail">Limpar filtros</button>
+        <button className="bg-sucess">Filtrar imagens</button>
       </div>
       <hr className="w-full rounded-full border-[2px] border-[#7C7C7C]" />
 
@@ -137,7 +108,10 @@ const ProfessorImagesBankPage = ({}) => {
           title={selectedImage.tituloImagem || ""}
           onEdit={handleOpenEditModal}
           onView={handleOpenViewModal}
-          onMore={() => {}}
+          onMore={() => {
+            console.log("More options clicked");
+            // The dropdown and delete functionality is now handled within the ImageBankItem component
+          }}
         />
       </div>
 
