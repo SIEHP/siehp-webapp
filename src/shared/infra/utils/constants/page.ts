@@ -6,27 +6,33 @@ export const PAGES: {
   HOME_PAGE: {
     label: "Home",
     link: "/",
+    someNeededPermissions: [],
   },
   HELP: {
     label: "Ajuda",
     link: "/help",
+    someNeededPermissions: [],
   },
-  ADMIN: {
-    label: "Administração",
-    link: "/admin",
+  MANAGE_PROFESSORS: {
+    label: "Gerenciar Professores",
+    link: "/admin/professores",
+    someNeededPermissions: ["MANTER_PROFESSORES"],
   },
   ADD_IMAGE: {
     label: "Adicionar Imagem",
-    link: "/professor/adicionar-imagem",
+    link: "/professor/addImage",
+    someNeededPermissions: ["MANTER_IMAGENS"],
   },
   IMAGES_BANK: {
     label: "Banco de Imagens",
-    link: "/professor/banco-de-imagens",
+    link: "/professor/imagesBank",
+    someNeededPermissions: ["ACESSAR_IMAGENS"],
   },
 };
 
 export const LANDING_PAGE_NAVBAR_LINKS: (keyof typeof PagesEnum)[] = [
-  // "HELP",
-  // "HOME_PAGE",
-  // "ADD_IMAGES",
+  "HELP",
+  "HOME_PAGE",
+  "ADD_IMAGE",
+  "IMAGES_BANK",
 ];

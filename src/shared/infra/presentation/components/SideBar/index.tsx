@@ -12,7 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { UserIcon, PencilIcon, LogoutIcon } from "../Icons";
-
+import { useAuth } from "@/modules/user/infra/services/hooks/useAuth";
 const SideBarRoot = ({ children }: SideBarRootProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -85,6 +85,12 @@ const SideBarItem = ({ Icon, title, subItems }: SideBarItemProps) => {
 
   const activeSubItem = subItems.find((item) => pathname === item.link);
 
+  if (subItems.length === 0) {
+    return (
+      <></>
+    )
+  }
+  
   return (
     <Collapsible.Root className="w-full">
       <Collapsible.Trigger className='flex items-center justify-start gap-1 [&[data-state="closed"]>svg:last-child]:-mt-0.5 [&[data-state="closed"]>svg:last-child]:rotate-180'>
@@ -128,6 +134,7 @@ const SideBarItem = ({ Icon, title, subItems }: SideBarItemProps) => {
 
 const SideBarFooter = ({ userName, userRole }: SideBarFooterProps) => {
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
+  const { logout } = useAuth();
 
   const handleProfileImageSelect = (file: File | null) => {
     // Aqui vamos precisar de um setValue do hook form, então vamos usar uma implementação adaptada
@@ -191,7 +198,9 @@ const SideBarFooter = ({ userName, userRole }: SideBarFooterProps) => {
       <div className="flex items-center justify-start">
         <button
           className="flex items-center justify-center gap-0.5 rounded-md bg-fail p-0.5"
-          onClick={() => {}}
+          onClick={() => {
+            logout.handleLogout();
+          }}
         >
           <LogoutIcon className="h-[24px] w-[24px]  text-gray-900-tk" />
           <p className="text-md font-semi-bold text-gray-900-tk">Sair</p>

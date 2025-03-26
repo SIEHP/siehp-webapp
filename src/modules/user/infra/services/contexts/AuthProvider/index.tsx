@@ -9,12 +9,13 @@ import { AuthProviderProps } from "./types";
 import { Auth } from "@/modules/user/domain/models";
 import { LoginFormData } from "@/modules/user/infra/factories/presentation/pages/LoginPage/validation";
 import { RemoteError } from "@/shared/domain/errors/remote-error";
+import { useRouter } from "next/navigation";
 export const AuthContext = createContext<AuthContextData>(
   {} as AuthContextData,
 );
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
-  
+  const router = useRouter();
 
   const { setAuth, auth } = useAuthStore();
 
@@ -37,9 +38,23 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     await login(data);
   };
 
+  const handleLogout = async () => {
+    setAuth(null);
+    router.push('/');
+  };
+
+  const handleRefreshAccessToken = async () => {
+    try {
+      const userAuth = await new RemoteAuth().refreshAccessToken(); 
+      setAuth(userAuth);
+    } catch (error) {
+      handleLogout();
+    }
+  };
+
   return (
     <AuthContext.Provider
-      value={{login: {handleLogin, isPending, error: error?.response?.data?.message, data}, auth}}
+      value={{login: {handleLogin, isPending, error: error?.response?.data?.message, data}, auth, logout: {handleLogout}, refreshAccessToken: {handleRefreshAccessToken}}}
     >
       {children}
     </AuthContext.Provider>

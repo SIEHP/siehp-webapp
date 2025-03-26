@@ -11,3 +11,7 @@ export type AuthUserParamsDTO = z.infer<typeof AuthUserParamsSchema>;
 export const AuthUserResponseSchema = AuthSchema;
 
 export type AuthUserResponseDTO = z.infer<typeof AuthUserResponseSchema>;
+
+export const RefreshAccessTokenResponseSchema = AuthSchema;
+
+export type RefreshAccessTokenResponseDTO = z.infer<typeof RefreshAccessTokenResponseSchema>;
