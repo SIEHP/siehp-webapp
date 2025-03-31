@@ -3,11 +3,32 @@
 import { AdminPagesHeader } from "../../../../../../../shared/infra/presentation/components/AdminPagesHeader";
 import { CustomTable } from "../../../../../../../shared/infra/presentation/components/CustomTable";
 import { AddPeopleIcon } from "../../../../../../../shared/infra/presentation/components/Icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AdminProfessorRegistrationModal } from "@/shared/infra/presentation/components/AdminProfessorRegistrationModal";
+import useAdmin from "@/modules/user/infra/services/hooks/useAdmin";
+import { GetProfessorsResponseDTO } from "@/modules/user/domain/dtos/get-professors";
 
 const ProfessorsPage = ({}) => {
   const [open, setOpen] = useState<boolean>(false);
+  const [professors, setProfessors] = useState<GetProfessorsResponseDTO>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const { getProfessors } = useAdmin();
+
+  const handleGetProfessors = async () => {
+    try {
+      setLoading(true);
+      const response = await getProfessors.handleGetProfessors();
+      setProfessors(response);
+    } catch (error) {
+      console.error("Erro ao buscar professores:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleGetProfessors();
+  }, []);
 
   const handleOpenModal = () => {
     setOpen(true);
@@ -15,11 +36,11 @@ const ProfessorsPage = ({}) => {
 
   const handleCloseModal = () => {
     setOpen(false);
+    handleGetProfessors(); // Recarregar lista após fechar o modal
   };
 
   return (
     <div className="flex h-full flex-col">
-      {/* exemplo, remover quando dor fazer integração */}
       <AdminProfessorRegistrationModal isOpen={open} onClose={handleCloseModal}></AdminProfessorRegistrationModal>
       <AdminPagesHeader.Root className="pt-4 pl-4 pr-4 md:gap-0 gap-1 items-start flex-col md:flex-row flex">
         <AdminPagesHeader.Title >Professores</AdminPagesHeader.Title>
@@ -33,7 +54,6 @@ const ProfessorsPage = ({}) => {
             <AdminPagesHeader.Filter />
         </AdminPagesHeader.Body>
       </AdminPagesHeader.Root>
-      {/* exemplo, remover quando dor fazer integração */}
       <div className="flex-1 p-4 overflow-auto">
         <CustomTable.Root className="w-full min-w-[1000px]">
           <CustomTable.Header>
@@ -45,38 +65,44 @@ const ProfessorsPage = ({}) => {
                 Nome do Professor
               </CustomTable.Head>
               <CustomTable.Head className="w-[300px] md:w-[25%]" hasFilter>
-                Departamento
+                Email
               </CustomTable.Head>
               <CustomTable.Head className="w-[200px] md:w-[15%]">
                 Estado do Professor
-              </CustomTable.Head>
-              <CustomTable.Head className="w-[150px] md:w-[15%]">
-                Ações
               </CustomTable.Head>
               <CustomTable.Head className="w-[50px] md:w-[5%]">{" "}</CustomTable.Head>
             </CustomTable.Row>
           </CustomTable.Header>
           <CustomTable.Body>
-            <CustomTable.Row className="md:justify-between">
-              <CustomTable.Cell>
-                202100012345
-              </CustomTable.Cell>
-              <CustomTable.Cell>
-                Professor 1
-              </CustomTable.Cell>
-              <CustomTable.Cell>
-                Morfologia
-              </CustomTable.Cell>
-              <CustomTable.CellStatus
-                status="ACTIVE"
-              >
-                Ativo
-              </CustomTable.CellStatus>
-              <CustomTable.CellButton>
-                Ver Turmas
-              </CustomTable.CellButton>
-              <CustomTable.CellMenu />
-            </CustomTable.Row>
+            {loading ? (
+              <CustomTable.Row className="md:justify-between">
+                <CustomTable.Cell colSpan={6}>Carregando...</CustomTable.Cell>
+              </CustomTable.Row>
+            ) : professors.length > 0 ? (
+              professors.map((professor) => (
+                <CustomTable.Row key={professor.id} className="md:justify-between">
+                  <CustomTable.Cell>
+                    {professor.registration_code}
+                  </CustomTable.Cell>
+                  <CustomTable.Cell>
+                    {professor.name}
+                  </CustomTable.Cell>
+                  <CustomTable.Cell>
+                    {professor.email}
+                  </CustomTable.Cell>
+                  <CustomTable.CellStatus
+                    status={professor.status === "ACTIVE" ? "ACTIVE" : "INACTIVE"}
+                  >
+                    {professor.status === "ACTIVE" ? "Ativo" : "Inativo"}
+                  </CustomTable.CellStatus>
+                  <CustomTable.CellMenu />
+                </CustomTable.Row>
+              ))
+            ) : (
+              <CustomTable.Row className="md:justify-between">
+                <CustomTable.Cell colSpan={6}>Nenhum professor encontrado</CustomTable.Cell>
+              </CustomTable.Row>
+            )}
           </CustomTable.Body>
         </CustomTable.Root>
       </div>
