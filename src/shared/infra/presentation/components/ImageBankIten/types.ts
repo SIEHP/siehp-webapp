@@ -6,9 +6,11 @@ export interface ImageBankItemProps {
   imageUrl: string;
   title: string;
   className?: string;
+  id: number;
   onEdit?: () => void;
   onView?: () => void;
   onMore?: () => void;
+  onDelete?: () => void;
 }
 
 export interface ImageBankItemRootProps extends HTMLAttributes<HTMLDivElement> {

@@ -15,6 +15,7 @@ import {
 } from "../Icons";
 import { ViewImageModal } from "../ViewImageModal";
 import { AlertDialog } from "../AlertDialog";
+import { useImage } from "@/modules/image/infra/services/hooks/useImage";
 
 export function ImageBankItem({
   imageUrl,
@@ -23,12 +24,14 @@ export function ImageBankItem({
   onEdit,
   onView,
   onMore,
+  id,
+  onDelete,
 }: ImageBankItemProps) {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
+  const { deleteImage } = useImage();
   const handleViewClick = () => {
     setIsViewModalOpen(true);
     if (onView) onView();
@@ -46,9 +49,14 @@ export function ImageBankItem({
   };
 
   const handleDeleteConfirm = () => {
-    // Aqui seria implementada a lógica de exclusão
-    console.log("Imagem excluída:", title);
-    setIsDeleteDialogOpen(false);
+    deleteImage.handleDeleteImage({ id })
+      .then(() => {
+        setIsDeleteDialogOpen(false);
+        if (onDelete) onDelete();
+      })
+      .catch((error) => {
+        console.error("Erro ao excluir imagem:", error);
+      });
   };
 
   // Close dropdown when clicking outside

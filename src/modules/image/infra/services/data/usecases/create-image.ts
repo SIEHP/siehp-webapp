@@ -1,7 +1,7 @@
 import api from "@/shared/infra/services/api";
 import { CreateImageParamsDTO, CreateImageResponseDTO, CreateImageResponseSchema } from "@/modules/image/domain/dtos/create-image";
 import { checkApiError } from "@/shared/infra/utils/functions/check-api-error";
-
+import { ApiError } from "@/shared/domain/models/error";
 export class CreateImage {
   async createImage({
     title,
@@ -10,7 +10,7 @@ export class CreateImage {
   }: CreateImageParamsDTO): Promise<CreateImageResponseDTO> {
   
 
-    const httpResponse = await api.post<CreateImageResponseDTO>(`/image/create`, {
+    const httpResponse = await api.post<CreateImageResponseDTO | ApiError>(`/image/create`, {
       title,
       url,
       tags,

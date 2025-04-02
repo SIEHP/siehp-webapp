@@ -11,7 +11,7 @@ import {
   professorAddImageSchema,
 } from "./validation";
 import { handleImageSelect as imageSelectHandler } from "@/shared/infra/utils/functions/image-picker";
-import useImage from "@/modules/image/infra/services/hooks/useImage";
+import { useImage } from "@/modules/image/infra/services/hooks/useImage";
 
 const ProfessorAddImagePage = () => {
   const [openValidationModal, setOpenValidationModal] =

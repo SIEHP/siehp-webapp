@@ -10,7 +10,7 @@ import {
 } from "@/shared/infra/presentation/components/EditImageFieldsModal";
 import gettyimages1333715238612x612 from "@/shared/infra/presentation/components/ImageBankIten/gettyimages-1333715238-612x612.jpg";
 import { ViewImageModal } from "@/shared/infra/presentation/components/ViewImageModal";
-import useImage from "@/modules/image/infra/services/hooks/useImage";
+import { useImage } from "@/modules/image/infra/services/hooks/useImage";
 
 const ProfessorImagesBankPage = ({}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -73,6 +73,16 @@ const ProfessorImagesBankPage = ({}) => {
     
     fetchImages();
   }, []);
+
+  // Função para recarregar as imagens
+  const handleImagesReload = async () => {
+    try {
+      const updatedImages = await listImage.handleListImage();
+      setImages(updatedImages);
+    } catch (error) {
+      console.error("Erro ao recarregar imagens:", error);
+    }
+  };
 
   /**
    * Função para formatar a data corretamente, independente do formato recebido
@@ -141,7 +151,8 @@ const ProfessorImagesBankPage = ({}) => {
         {images.length > 0 ? (
           images.map((image) => (
             <ImageBankItem
-              key={image.id}
+              key={Number(image.id)}
+              id={Number(image.id)}
               imageUrl={image.url}
               title={image.title}
               onEdit={() => {
@@ -173,6 +184,7 @@ const ProfessorImagesBankPage = ({}) => {
               onMore={() => {
                 console.log("Mais opções para imagem:", image.id);
               }}
+              onDelete={handleImagesReload}
             />
           ))
         ) : (
