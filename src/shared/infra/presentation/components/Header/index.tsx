@@ -40,7 +40,7 @@ const Header = () => {
             </Link>
           </li>
           <li>
-            <Link href="#" className="text-gray-900-tk text-lg font-semi-bold hover:text-gray-300">
+            <Link href="/help/iniciar-sessao" target="_blank" className="text-gray-900-tk text-lg font-semi-bold hover:text-gray-300">
               Fale Conosco
             </Link>
           </li>
@@ -89,7 +89,7 @@ const Header = () => {
             </Link>
           </li>
           <li className="px-[16px] py-[8px] m-[0]">
-            <Link href="#" className="text-gray-900-tk text-md font-semi-bold hover:text-gray-300">
+            <Link href="/help/iniciar-sessao" target="_blank" className="text-gray-900-tk text-md font-semi-bold hover:text-gray-300">
               Fale Conosco
             </Link>
           </li>
