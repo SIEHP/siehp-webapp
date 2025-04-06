@@ -6,7 +6,8 @@ import { CustomDataField } from "@/shared/infra/presentation/components/CustomDa
 import { ImageBankItem } from "@/shared/infra/presentation/components/ImageBankIten";
 import {
   EditImageFieldsModal,
-  ImageData,
+  ReceivedImageData,
+  UpdatedImageData,
 } from "@/shared/infra/presentation/components/EditImageFieldsModal";
 import gettyimages1333715238612x612 from "@/shared/infra/presentation/components/ImageBankIten/gettyimages-1333715238-612x612.jpg";
 import { ViewImageModal } from "@/shared/infra/presentation/components/ViewImageModal";
@@ -14,16 +15,7 @@ import useImage from "@/modules/image/infra/services/hooks/useImage";
 
 const ProfessorImagesBankPage = ({}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<ImageData>({
-    // Dados da imagem que serão editados
-    direitosImagem: "Licença CC",
-    tecidoOrgao: "Epitélio",
-    estadoPeca: "Conservada",
-    dataCadastro: "01/01/2023",
-    tituloImagem: "Lâmina de Exemplo 1",
-    descricaoImagem: "Lâmina de epitélio utilizada para estudo",
-    tags: ["epitélio", "lâmina", "microscópio"],
-  });
+  const [selectedImage, setSelectedImage] = useState<ReceivedImageData>({});
   const [currentImageUrl, setCurrentImageUrl] = useState("");
 
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
@@ -54,7 +46,7 @@ const ProfessorImagesBankPage = ({}) => {
   };
 
   // Função para atualizar os dados da imagem quando editados no modal
-  const handleUpdateImageData = (updatedData: ImageData) => {
+  const handleUpdateImageData = (updatedData: UpdatedImageData) => {
     setSelectedImage(updatedData);
     console.log("Imagem atualizada:", updatedData);
     handleConfirmEdit();
@@ -133,9 +125,8 @@ const ProfessorImagesBankPage = ({}) => {
         <button className="bg-fail">Limpar filtros</button>
         <button className="bg-sucess">Filtrar imagens</button>
       </div>
-      <hr className="w-full rounded-full border-[2px] border-[#7C7C7C]" />
-
-      <div className="w-full border-[2px] border-[#7C7C7C]" />
+      
+      <hr className="w-full rounded-full border-[1px] border-[#7C7C7C]" />
 
       <div className="grid w-full grid-cols-1 gap-4 py-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {images.length > 0 ? (
@@ -146,26 +137,26 @@ const ProfessorImagesBankPage = ({}) => {
               title={image.title}
               onEdit={() => {
                 setSelectedImage({
-                  direitosImagem: "Licença CC",
-                  tecidoOrgao: "Epitélio",
-                  estadoPeca: "Conservada",
-                  dataCadastro: formatDate(image.created_at),
-                  tituloImagem: image.title,
-                  descricaoImagem: "Descrição da imagem",
-                  tags: image.tags ? image.tags.map((tag: { name: string }) => tag.name) : [],
+                  copyright: image.copyright,
+                  tissue: image.tissue,
+                  piece_state: image.piece_state,
+                  pick_date: formatDate(image.created_at),
+                  title: image.title,
+                  description: image.description,
+                  image_tags: image.image_tags ? image.image_tags.map((tag: { name: string }) => tag.name) : [],
                 });
                 setCurrentImageUrl(image.url);
                 handleOpenEditModal();
               }}
               onView={() => {
                 setSelectedImage({
-                  direitosImagem: "Licença CC",
-                  tecidoOrgao: "Epitélio",
-                  estadoPeca: "Conservada",
-                  dataCadastro: formatDate(image.created_at),
-                  tituloImagem: image.title,
-                  descricaoImagem: "Descrição da imagem",
-                  tags: image.tags ? image.tags.map((tag: { name: string }) => tag.name) : [],
+                  copyright: image.copyright,
+                  tissue: image.tissue,
+                  piece_state: image.piece_state,
+                  pick_date: formatDate(image.created_at),
+                  title: image.title,
+                  description: image.description,
+                  image_tags: image.image_tags ? image.image_tags.map((tag: { name: string }) => tag.name) : [],
                 });
                 setCurrentImageUrl(image.url);
                 handleOpenViewModal();

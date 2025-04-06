@@ -6,6 +6,11 @@ export class CreateImage {
   async createImage({
     title,
     url,
+    piece_state,
+    pick_date,
+    tissue,
+    copyright,
+    description,
     tags,
   }: CreateImageParamsDTO): Promise<CreateImageResponseDTO> {
   
@@ -13,6 +18,11 @@ export class CreateImage {
     const httpResponse = await api.post<CreateImageResponseDTO>(`/image/create`, {
       title,
       url,
+      piece_state,
+      pick_date,
+      tissue,
+      copyright,
+      description,
       tags,
     });
 

@@ -84,7 +84,12 @@ const ProfessorAddImagePage = () => {
         createImage.handleCreateImage({ 
           title: formData.tituloImagem, 
           url: imageUrl, 
-          tags: formData.tags 
+          piece_state: formData.estadoPeca,
+          pick_date: new Date(formData.dataCadastro),
+          tissue: formData.tecidoOrgao,
+          copyright: formData.direitosImagem,
+          description: formData.descricaoImagem,
+          tags: formData.tags
         });
         
       } catch (error) {

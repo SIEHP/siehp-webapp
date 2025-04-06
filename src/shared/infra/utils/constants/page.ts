@@ -14,18 +14,18 @@ export const PAGES: {
     someNeededPermissions: [],
   },
   MANAGE_PROFESSORS: {
-    label: "Gerenciar Professores",
+    label: "Professores",
     link: "/admin/professores",
     someNeededPermissions: ["MANTER_PROFESSORES"],
   },
   ADD_IMAGE: {
     label: "Adicionar Imagem",
-    link: "/professor/addImage",
+    link: "/professor/adicionar-imagem",
     someNeededPermissions: ["MANTER_IMAGENS"],
   },
   IMAGES_BANK: {
     label: "Banco de Imagens",
-    link: "/professor/imagesBank",
+    link: "/professor/banco-de-imagens",
     someNeededPermissions: ["ACESSAR_IMAGENS"],
   },
 };

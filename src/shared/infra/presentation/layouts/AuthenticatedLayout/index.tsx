@@ -12,16 +12,14 @@ const AuthenticatedLayout = ({ children }: AuthenticatedLayoutProps) => {
   const subItemsAdmin = [PAGES.MANAGE_PROFESSORS].filter((page) => checkPagePermissions(page, auth?.user.permissions ?? []));
   const subItemsImage = [PAGES.ADD_IMAGE, PAGES.IMAGES_BANK].filter((page) => checkPagePermissions(page, auth?.user.permissions ?? []));
 
-
   return (
     <>
       <div className="flex h-dvh w-dvw flex-row relative">
         <SideBar.Root>
           <SideBar.Logo />
           <SideBar.ItemContainer>
-
             <SideBar.Item
-              title="Admin"
+              title="Gerenciar"
               Icon={GearIcon}
               subItems={subItemsAdmin}
             />
