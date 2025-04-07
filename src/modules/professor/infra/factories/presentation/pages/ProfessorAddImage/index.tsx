@@ -19,6 +19,18 @@ const ProfessorAddImagePage = () => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
   const { createImage } = useImage();
 
+  // Ensure empty tags array is initialized
+  const defaultValues = {
+    direitosImagem: "",
+    tecidoOrgao: "",
+    estadoPeca: "",
+    dataCadastro: "",
+    tituloImagem: "",
+    descricaoImagem: "",
+    tags: [] as string[],
+    imageFile: null,
+  };
+
   const {
     control,
     handleSubmit,
@@ -28,16 +40,7 @@ const ProfessorAddImagePage = () => {
     formState: { errors },
   } = useForm<ProfessorAddImageFormData>({
     resolver: zodResolver(professorAddImageSchema),
-    defaultValues: {
-      direitosImagem: "",
-      tecidoOrgao: "",
-      estadoPeca: "",
-      dataCadastro: "",
-      tituloImagem: "",
-      descricaoImagem: "",
-      tags: [],
-      imageFile: null,
-    },
+    defaultValues
   });
 
   const handleOpenValidationModal = () => {
@@ -130,16 +133,7 @@ const ProfessorAddImagePage = () => {
 
   const handleLimparDados = () => {
     // Limpar os campos do formulário
-    reset({
-      direitosImagem: "",
-      tecidoOrgao: "",
-      estadoPeca: "",
-      dataCadastro: "",
-      tituloImagem: "",
-      descricaoImagem: "",
-      tags: [],
-      imageFile: null,
-    });
+    reset(defaultValues);
 
     // Limpar a imagem
     setImagePreviewUrl(null);
