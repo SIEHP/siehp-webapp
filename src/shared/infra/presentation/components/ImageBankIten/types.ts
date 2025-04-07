@@ -5,10 +5,12 @@ import Image from "next/image";
 export interface ImageBankItemProps {
   imageUrl: string;
   title: string;
+  imageId?: number;
   className?: string;
   onEdit?: () => void;
   onView?: () => void;
   onMore?: () => void;
+  onDelete?: (imageId: number) => void;
 }
 
 export interface ImageBankItemRootProps extends HTMLAttributes<HTMLDivElement> {

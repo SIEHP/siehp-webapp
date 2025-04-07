@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import {
   ImageBankItemProps,
@@ -15,19 +15,25 @@ import {
 } from "../Icons";
 import { ViewImageModal } from "../ViewImageModal";
 import { AlertDialog } from "../AlertDialog";
+import useImage from "@/modules/image/infra/services/hooks/useImage";
 
 export function ImageBankItem({
   imageUrl,
   title,
+  imageId,
   className = "",
   onEdit,
   onView,
   onMore,
+  onDelete,
 }: ImageBankItemProps) {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { deleteImage } = useImage();
 
   const handleViewClick = () => {
     setIsViewModalOpen(true);
@@ -45,10 +51,24 @@ export function ImageBankItem({
     setIsDeleteDialogOpen(true);
   };
 
-  const handleDeleteConfirm = () => {
-    // Aqui seria implementada a lógica de exclusão
-    console.log("Imagem excluída:", title);
-    setIsDeleteDialogOpen(false);
+  const handleDeleteConfirm = async () => {
+    if (!imageId) {
+      setError("ID da imagem não encontrado");
+      return;
+    }
+
+    setIsDeleting(true);
+    setError(null);
+
+    try {
+      await deleteImage.handleDeleteImage(imageId);
+      setIsDeleteDialogOpen(false);
+      if (onDelete) onDelete(imageId);
+    } catch (err: any) {
+      setError(err?.message || "Erro ao excluir imagem. Tente novamente.");
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   // Close dropdown when clicking outside
@@ -82,7 +102,7 @@ export function ImageBankItem({
 
         <div className="h-full w-full rounded-b-lg bg-gray-700-tk text-center">
           <p className="text-gray-800 p-1 text-md font-regular">
-            {"Lâmina de Exemplo 1"}
+            {title || "Sem título"}
           </p>
 
           <div className="flex w-full items-center justify-center gap-2 p-1">
@@ -145,9 +165,15 @@ export function ImageBankItem({
             <AlertDialog.Description className="text-gray-100-tk">
               Tem certeza que deseja excluir esta imagem? Esta ação não pode ser desfeita.
             </AlertDialog.Description>
+            {error && (
+              <div className="mt-1 text-red-500 text-sm">{error}</div>
+            )}
             <div className="flex justify-between gap-2 mt-1">
               <AlertDialog.Cancel asChild>
-                <button className="px-1 py-1 rounded-md bg-fail text-gray-100-tk hover:bg-gray-400-tk font-regular">
+                <button 
+                  className="px-1 py-1 rounded-md bg-fail text-gray-100-tk hover:bg-gray-400-tk font-regular"
+                  disabled={isDeleting}
+                >
                   Cancelar
                 </button>
               </AlertDialog.Cancel>
@@ -155,8 +181,9 @@ export function ImageBankItem({
                 <button 
                   className="px-1 py-1 rounded-md bg-sucess text-gray-100-tk hover:bg-opacity-90 font-regular"
                   onClick={handleDeleteConfirm}
+                  disabled={isDeleting}
                 >
-                  Excluir
+                  {isDeleting ? "Excluindo..." : "Excluir"}
                 </button>
               </AlertDialog.Action>
             </div>

@@ -6,8 +6,10 @@ import { CreateImage } from "../data/usecases/create-image";
 import { ListImage } from "../data/usecases/list-image";
 import { UpdateImage } from "../data/usecases/update-image";
 import { ListTags } from "../data/usecases/list-tags";
+import { DeleteImage } from "../data/usecases/delete-image";
 import { UpdateImageParamsDTO } from "@/modules/image/domain/dtos/update-image";
 import { ListTagsResponseDTO } from "@/modules/image/domain/dtos/list-tags";
+import { DeleteImageResponseDTO } from "@/modules/image/domain/dtos/delete-image";
 
 const useImage = () => {
 
@@ -32,6 +34,11 @@ const useImage = () => {
         return response;
     }, []);
 
+    const handleDeleteImage = useCallback(async (id: number): Promise<DeleteImageResponseDTO> => {
+        const response = await new DeleteImage().deleteImage(id);
+        return response;
+    }, []);
+
     const handleListTags = useCallback(async (): Promise<ListTagsResponseDTO> => {
         const response = await new ListTags().listTags();
         return response;
@@ -52,6 +59,12 @@ const useImage = () => {
         },
         updateImage: {
             handleUpdateImage,
+            isPending,
+            error: error?.response?.data?.message,
+            data,
+        },
+        deleteImage: {
+            handleDeleteImage,
             isPending,
             error: error?.response?.data?.message,
             data,

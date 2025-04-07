@@ -19,7 +19,7 @@ const ProfessorImagesBankPage = ({}) => {
   const [currentImageUrl, setCurrentImageUrl] = useState("");
 
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-  const { listImage, updateImage } = useImage();
+  const { listImage, updateImage, deleteImage } = useImage();
   const { auth } = useAuth();
   const [images, setImages] = useState<any[]>([]);
   const [currentImageId, setCurrentImageId] = useState<number | null>(null);
@@ -158,24 +158,27 @@ const ProfessorImagesBankPage = ({}) => {
     }
   };
 
+  // Fetch images on component mount and when auth changes
   useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const images = await listImage.handleListImage();
-        console.log("Imagens carregadas:", images);
-        // Log detalhado da primeira imagem se existir
-        if (images && images.length > 0) {
-          console.log("Exemplo da primeira imagem:", JSON.stringify(images[0]));
-          console.log("Tags da primeira imagem:", images[0].tags);
-        }
-        setImages(images);
-      } catch (error) {
-        console.error("Erro ao carregar imagens:", error);
-      }
-    };
-    
-    fetchImages();
-  }, []);
+    if (auth?.token) {
+      fetchImages();
+    }
+  }, [auth]);
+
+  const fetchImages = async () => {
+    try {
+      const response = await listImage.handleListImage();
+      setImages(response);
+    } catch (error) {
+      console.error("Error fetching images:", error);
+    }
+  };
+
+  const handleImageDeleted = async (imageId: number) => {
+    // Refresh the image list after deletion
+    await fetchImages();
+    // Show success message or notification here if needed
+  };
 
   /**
    * Função para formatar a data corretamente, independente do formato recebido
@@ -281,6 +284,7 @@ const ProfessorImagesBankPage = ({}) => {
             <ImageBankItem
               key={image.id}
               imageUrl={image.url}
+              imageId={image.id}
               title={image.title}
               onEdit={() => {
                 const imageDataToSend = {
@@ -314,6 +318,7 @@ const ProfessorImagesBankPage = ({}) => {
               onMore={() => {
                 console.log("Mais opções para imagem:", image.id);
               }}
+              onDelete={handleImageDeleted}
             />
           ))
         ) : (
