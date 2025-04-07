@@ -25,6 +25,7 @@ const ProfessorImagesBankPage = ({}) => {
   const [currentImageId, setCurrentImageId] = useState<number | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateError, setUpdateError] = useState<string | null>(null);
+  const [filterTags, setFilterTags] = useState<string[]>([]);
 
   const handleOpenViewModal = () => {
     setIsViewModalOpen(true);
@@ -218,6 +219,11 @@ const ProfessorImagesBankPage = ({}) => {
     }
   };
 
+  // Handler for filter tags
+  const handleFilterTagsChange = (newTags: string[]) => {
+    setFilterTags(newTags);
+  };
+
   return (
     <div className="flex h-full w-full flex-col items-center gap-1 overflow-y-auto p-4">
       <ProfessorPagesHeader.Root>
@@ -254,7 +260,11 @@ const ProfessorImagesBankPage = ({}) => {
         <CustomDataField.Root className="w-full">
           <CustomDataField.Title>Tags:</CustomDataField.Title>
           <CustomDataField.Content>
-            <CustomDataField.Tag className="w-full" />
+            <CustomDataField.Tag 
+              className="w-full" 
+              initialTags={filterTags}
+              onTagsChange={handleFilterTagsChange}
+            />
           </CustomDataField.Content>
         </CustomDataField.Root>
       </div>

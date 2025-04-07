@@ -1,4 +1,7 @@
 import * as React from "react";
+import { HTMLAttributes, ReactNode } from "react";
+import useImage from "@/modules/image/infra/services/hooks/useImage";
+import { TagDTO } from "@/modules/image/domain/dtos/list-tags";
 
 import {
   DataFieldRootProps,
@@ -92,10 +95,14 @@ const CustomDataFieldContentTag = ({
   const [tags, setTags] = React.useState<string[]>(initialTags);
   const [suggestions, setSuggestions] = React.useState<string[]>([]);
   const [showDropdown, setShowDropdown] = React.useState<boolean>(false);
+  const [allTags, setAllTags] = React.useState<TagDTO[]>([]);
+  const [isLoadingTags, setIsLoadingTags] = React.useState<boolean>(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const previousInitialTagsRef = React.useRef<string[]>(initialTags);
+  const { listTags } = useImage();
+  const tagsAlreadyFetched = React.useRef(false);
 
   // Atualiza as tags quando initialTags mudar
   React.useEffect(() => {
@@ -110,7 +117,30 @@ const CustomDataFieldContentTag = ({
     }
   }, [initialTags]);
 
-  // Simulação de chamada à API para obter sugestões
+  // Fetch all tags on component mount
+  React.useEffect(() => {
+    // Only fetch tags once to prevent infinite loop
+    if (tagsAlreadyFetched.current) return;
+    
+    const fetchAllTags = async () => {
+      try {
+        setIsLoadingTags(true);
+        const response = await listTags.handleListTags();
+        if (response && Array.isArray(response)) {
+          setAllTags(response);
+          tagsAlreadyFetched.current = true;
+        }
+      } catch (error) {
+        console.error("Erro ao buscar tags:", error);
+      } finally {
+        setIsLoadingTags(false);
+      }
+    };
+
+    fetchAllTags();
+  }, []); // Empty dependency array to run only on mount
+
+  // Busca de sugestões com base no input e tags do servidor
   const fetchSuggestions = React.useCallback(
     (query: string) => {
       if (!query.trim()) {
@@ -119,25 +149,18 @@ const CustomDataFieldContentTag = ({
         return;
       }
 
-      // Aqui seria feita a chamada à API real no futuro
-      // Por enquanto, simulamos algumas sugestões
-      const mockSuggestions = [
-        "React",
-        "TypeScript",
-        "JavaScript",
-        "Node.js",
-        "TailwindCSS",
-        "NextJS",
-      ].filter(
-        (tag) =>
-          tag.toLowerCase().includes(query.toLowerCase()) &&
-          !tags.includes(tag),
-      );
+      // Filtra as tags com base no input e nas que já foram adicionadas
+      const filteredSuggestions = allTags
+        .filter(tag => 
+          tag.name.toLowerCase().includes(query.toLowerCase()) && 
+          !tags.includes(tag.name)
+        )
+        .map(tag => tag.name);
 
-      setSuggestions(mockSuggestions);
+      setSuggestions(filteredSuggestions);
       setShowDropdown(true);
     },
-    [tags],
+    [tags, allTags],
   );
 
   const addTag = React.useCallback(
@@ -204,8 +227,9 @@ const CustomDataFieldContentTag = ({
                 addTag(inputValue);
               }
             }}
-            placeholder="Digite uma tag..."
+            placeholder={isLoadingTags ? "Carregando tags..." : "Digite uma tag..."}
             className="min-h-[50px] w-full max-w-[300px] rounded-md bg-gray-700-tk px-0.5 text-gray-100-tk"
+            disabled={isLoadingTags}
           />
 
           {showDropdown && (

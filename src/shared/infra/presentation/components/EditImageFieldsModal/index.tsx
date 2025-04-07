@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent } from "react";
+import React, { useState, useEffect, ChangeEvent, useRef } from "react";
 import Image from "next/image";
 import { CustomDataField } from "@/shared/infra/presentation/components/CustomDataField";
 
@@ -41,7 +41,27 @@ export function EditImageFieldsModal({
   isLoading = false,
   errorMessage = null,
 }: IEditImageFieldsModalProps) {
-  const modalRef = React.useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  // Extrair os dados da imagem do prop imageData
+  const { copyright = '', tissue = '', piece_state = '', pick_date = '', title = '', description = '', tags = [] } = imageData;
+  
+  // Processa tags para obter apenas os nomes em um array
+  const tagNames = React.useMemo(() => {
+    if (!tags) return [];
+    // Verifica se as tags são objetos ou strings
+    return Array.isArray(tags) 
+      ? tags.map(tag => typeof tag === 'string' ? tag : tag.name) 
+      : [];
+  }, [tags]);
+
+  // Estados para os campos modificáveis
+  const [updatedCopyright, setUpdatedCopyright] = useState(copyright);
+  const [updatedTissue, setUpdatedTissue] = useState(tissue);
+  const [updatedPieceState, setUpdatedPieceState] = useState(piece_state);
+  const [updatedPickDate, setUpdatedPickDate] = useState(pick_date);
+  const [updatedTitle, setUpdatedTitle] = useState(title);
+  const [updatedDescription, setUpdatedDescription] = useState(description);
+  const [updatedTags, setUpdatedTags] = useState<string[]>(tagNames);
 
   // Função para formatar data no formato YYYY-MM-DD para input type="date"
   const formatDateForInput = (dateString?: string): string => {
@@ -56,73 +76,60 @@ export function EditImageFieldsModal({
     }
   };
 
-  // Estados para campos editáveis
-  const [copyright, setCopyright] = useState("");
-  const [tissue, setTissue] = useState("");
-  const [piece_state, setPieceState] = useState("");
-  const [pick_date, setPickDate] = useState("");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [tags, setImageTags] = useState<string[]>([]);
-
   // Atualiza os estados quando o modal abre
   useEffect(() => {
     if (isOpen) {
-      setCopyright(imageData.copyright || "");
-      setTissue(imageData.tissue || "");
-      setPieceState(imageData.piece_state || "");
-      setPickDate(formatDateForInput(imageData.pick_date));
-      setTitle(imageData.title || "");
-      setDescription(imageData.description || "");
+      setUpdatedCopyright(copyright);
+      setUpdatedTissue(tissue);
+      setUpdatedPieceState(piece_state);
+      setUpdatedPickDate(formatDateForInput(pick_date));
+      setUpdatedTitle(title);
+      setUpdatedDescription(description);
       
       // Garante que as tags estejam corretamente formatadas
-      const formattedTags = Array.isArray(imageData.tags) 
-        ? imageData.tags.map(tag => typeof tag === 'string' ? tag : tag.name)
-        : [];
-      
-      setImageTags(formattedTags);
+      setUpdatedTags(tagNames);
     }
-  }, [isOpen, imageData]);
+  }, [isOpen, copyright, tissue, piece_state, pick_date, title, description, tagNames]);
 
   // Handlers para os inputs
   const handleCopyrightChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setCopyright(e.target.value);
+    setUpdatedCopyright(e.target.value);
   };
 
   const handleTissueChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setTissue(e.target.value);
+    setUpdatedTissue(e.target.value);
   };
 
   const handlePieceStateChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPieceState(e.target.value);
+    setUpdatedPieceState(e.target.value);
   };
 
   const handlePickDateChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPickDate(e.target.value);
+    setUpdatedPickDate(e.target.value);
   };
 
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
+    setUpdatedTitle(e.target.value);
   };
 
   const handleDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setDescription(e.target.value);
+    setUpdatedDescription(e.target.value);
   };
 
   const handleImageTagsChange = (newTags: string[]) => {
-    setImageTags(newTags);
+    setUpdatedTags(newTags);
   };
 
   const handleConfirm = () => {
     // Passa os dados editados para o onConfirm
     const updatedData: UpdatedImageData = {
-      copyright,
-      tissue,
-      piece_state,
-      pick_date,
-      title,
-      description,
-      tags,
+      copyright: updatedCopyright,
+      tissue: updatedTissue,
+      piece_state: updatedPieceState,
+      pick_date: updatedPickDate,
+      title: updatedTitle,
+      description: updatedDescription,
+      tags: updatedTags,
     };
     
     // Chama a função de confirmação com os dados atualizados
@@ -175,7 +182,7 @@ export function EditImageFieldsModal({
                 <CustomDataField.Content className="text-md">
                   <CustomDataField.Text
                     className="sm:w-[260px] md:w-[300px]"
-                    defaultValue={copyright}
+                    defaultValue={updatedCopyright}
                     onChange={handleCopyrightChange}
                   />
                 </CustomDataField.Content>
@@ -188,7 +195,7 @@ export function EditImageFieldsModal({
                 <CustomDataField.Content className="text-md">
                   <CustomDataField.Text
                     className="sm:w-[260px] md:w-[300px]"
-                    defaultValue={tissue}
+                    defaultValue={updatedTissue}
                     onChange={handleTissueChange}
                   />
                 </CustomDataField.Content>
@@ -201,7 +208,7 @@ export function EditImageFieldsModal({
                 <CustomDataField.Content className="text-md">
                   <CustomDataField.Text
                     className="sm:w-[260px] md:w-[300px]"
-                    defaultValue={piece_state}
+                    defaultValue={updatedPieceState}
                     onChange={handlePieceStateChange}
                   />
                 </CustomDataField.Content>
@@ -214,7 +221,7 @@ export function EditImageFieldsModal({
                 <CustomDataField.Content className="text-md">
                   <CustomDataField.Date
                     className="sm:w-[260px] md:w-[300px]"
-                    defaultValue={pick_date}
+                    defaultValue={updatedPickDate}
                     onChange={handlePickDateChange}
                   />
                 </CustomDataField.Content>
@@ -227,7 +234,7 @@ export function EditImageFieldsModal({
                 <CustomDataField.Content className="text-md">
                   <CustomDataField.Text
                     className="sm:w-[260px] md:w-[300px]"
-                    defaultValue={title}
+                    defaultValue={updatedTitle}
                     onChange={handleTitleChange}
                   />
                 </CustomDataField.Content>
@@ -240,7 +247,7 @@ export function EditImageFieldsModal({
                 <CustomDataField.Content className="text-md">
                   <CustomDataField.Text
                     className="sm:w-[260px] md:w-[300px]"
-                    defaultValue={description}
+                    defaultValue={updatedDescription}
                     onChange={handleDescriptionChange}
                   />
                 </CustomDataField.Content>
@@ -253,7 +260,7 @@ export function EditImageFieldsModal({
                 <CustomDataField.Content className="text-md">
                   <CustomDataField.Tag
                     className="w-full"
-                    initialTags={tags}
+                    initialTags={tagNames}
                     onTagsChange={handleImageTagsChange}
                   />
                 </CustomDataField.Content>
