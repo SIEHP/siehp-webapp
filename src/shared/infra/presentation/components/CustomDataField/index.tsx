@@ -95,6 +95,20 @@ const CustomDataFieldContentTag = ({
   const inputRef = React.useRef<HTMLInputElement>(null);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const previousInitialTagsRef = React.useRef<string[]>(initialTags);
+
+  // Atualiza as tags quando initialTags mudar
+  React.useEffect(() => {
+    // Use JSON.stringify para comparar os arrays
+    const currentTags = JSON.stringify(initialTags);
+    const previousTags = JSON.stringify(previousInitialTagsRef.current);
+    
+    // Só atualiza se forem diferentes
+    if (currentTags !== previousTags) {
+      setTags(initialTags);
+      previousInitialTagsRef.current = initialTags;
+    }
+  }, [initialTags]);
 
   // Simulação de chamada à API para obter sugestões
   const fetchSuggestions = React.useCallback(

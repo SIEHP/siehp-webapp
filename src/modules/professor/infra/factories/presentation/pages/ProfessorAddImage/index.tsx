@@ -80,11 +80,41 @@ const ProfessorAddImagePage = () => {
         const data = await response.json();
         const imageUrl = data.url;
         
-        // Agora usamos a URL gerada no createImage
+        // Processar a data para garantir que seja uma string ISO
+        let formattedDate = "";
+        if (formData.dataCadastro) {
+          try {
+            const dateObj = new Date(formData.dataCadastro);
+            if (!isNaN(dateObj.getTime())) {
+              formattedDate = dateObj.toISOString();
+            }
+          } catch (error) {
+            console.error("Erro ao converter data:", error);
+            formattedDate = formData.dataCadastro; // Manter como string se falhar
+          }
+        }
+        
+        console.log("Enviando dados para criar imagem:", {
+          title: formData.tituloImagem,
+          url: imageUrl,
+          piece_state: formData.estadoPeca,
+          pick_date: formattedDate,
+          tissue: formData.tecidoOrgao,
+          copyright: formData.direitosImagem,
+          description: formData.descricaoImagem,
+          tags: formData.tags
+        });
+        
+        // Agora usamos a URL gerada no createImage com data formatada
         createImage.handleCreateImage({ 
           title: formData.tituloImagem, 
           url: imageUrl, 
-          tags: formData.tags 
+          piece_state: formData.estadoPeca,
+          pick_date: formattedDate, // Enviamos a string ISO ao invés do objeto Date
+          tissue: formData.tecidoOrgao,
+          copyright: formData.direitosImagem,
+          description: formData.descricaoImagem,
+          tags: formData.tags
         });
         
       } catch (error) {

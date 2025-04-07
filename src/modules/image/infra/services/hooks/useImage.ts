@@ -1,10 +1,11 @@
-
-
 import { useMutation } from "@tanstack/react-query";
 import { CreateImageParamsDTO, CreateImageResponseDTO } from "@/modules/image/domain/dtos/create-image";
 import { RemoteError } from "@/shared/domain/errors/remote-error";
 import { CreateImage } from "../data/usecases/create-image";
 import { ListImage } from "../data/usecases/list-image";
+import { UpdateImage } from "../data/usecases/update-image";
+import { UpdateImageParamsDTO } from "@/modules/image/domain/dtos/update-image";
+
 const useImage = () => {
 
     const { mutateAsync: createImage, isPending, error, data } = useMutation<CreateImageResponseDTO, RemoteError, CreateImageParamsDTO>({
@@ -23,6 +24,11 @@ const useImage = () => {
         return response;
     };
 
+    const handleUpdateImage = async (data: UpdateImageParamsDTO) => {
+        const response = await new UpdateImage().updateImage(data);
+        return response;
+    };
+
     return {
         createImage: {
             handleCreateImage,
@@ -32,6 +38,12 @@ const useImage = () => {
         },
         listImage: {
             handleListImage,
+            isPending,
+            error: error?.response?.data?.message,
+            data,
+        },
+        updateImage: {
+            handleUpdateImage,
             isPending,
             error: error?.response?.data?.message,
             data,

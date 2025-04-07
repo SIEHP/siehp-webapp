@@ -26,7 +26,23 @@ api.interceptors.request.use((config) => {
    delete config.headers.Authorization; 
   }
   
+  // Depuração: log das requisições
+  console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url}`, config.data);
+  
   return config;
 });
+
+// Adicionar interceptor para depurar respostas
+api.interceptors.response.use(
+  (response) => {
+    console.log(`[API Response Success] ${response.status} ${response.config.url}`, response.data);
+    return response;
+  },
+  (error) => {
+    console.error(`[API Response Error] ${error.response?.status || 'Unknown'} ${error.config?.url}`, 
+      error.response?.data || error.message);
+    return Promise.reject(error);
+  }
+);
 
 export default api; 

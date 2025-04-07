@@ -15,10 +15,6 @@ const Header = () => {
     return LANDING_PAGE_NAVBAR_LINKS.includes(page as PagesEnum);
   }) as PagesEnum[];
 
-  const navbarLinks = navbarLinkKeys.map((link) => {
-    return PAGES[link];
-  });
-
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -36,7 +32,7 @@ const Header = () => {
         <ul className="hidden md:flex space-x-4">
           <li>
             <Link href="/" className="text-gray-900-tk text-lg font-semi-bold hover:text-gray-300">
-              Home
+              Início
             </Link>
           </li>
           <li>
