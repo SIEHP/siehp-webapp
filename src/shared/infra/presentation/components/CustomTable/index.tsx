@@ -14,6 +14,7 @@ import {
   TableCellMenuProps,
 } from "./types";
 import { ThreeDotsIcon, TopDownArrowIcon } from "../Icons";
+import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
 
 const CustomTableRoot = ({ children, className, ...props }: TableRootProps) => {
   return (
@@ -75,7 +76,29 @@ const CustomTableRow = ({ children, className, ...props }: TableRowProps) => {
   );
 };
 
-const CustomTableHead = ({ children, className, hasFilter = false, ...props }: TableHeadProps) => {
+const CustomTableHead = ({ 
+  children, 
+  className, 
+  hasFilter = false, 
+  onSort,
+  sortDirection,
+  isActiveSort,
+  ...props 
+}: TableHeadProps & { 
+  onSort?: () => void;
+  sortDirection?: 'asc' | 'desc' | null;
+  isActiveSort?: boolean;
+}) => {
+  const renderSortIcon = () => {
+    if (!isActiveSort) {
+      return <TopDownArrowIcon className="cursor-pointer" />;
+    }
+    
+    return sortDirection === 'asc' 
+      ? <ArrowUpIcon className="cursor-pointer" /> 
+      : <ArrowDownIcon className="cursor-pointer" />;
+  };
+
   return (
     <th 
       className={`h-12 text-left align-middle text-md font-medium text-gray-900 ${className ?? ""}`}
@@ -83,7 +106,11 @@ const CustomTableHead = ({ children, className, hasFilter = false, ...props }: T
     >
       <div className="flex items-center gap-0.5">
         {children}
-        {hasFilter && children && <TopDownArrowIcon className="cursor-pointer" onClick={() => {}} />}
+        {hasFilter && children && (
+          <div onClick={onSort}>
+            {renderSortIcon()}
+          </div>
+        )}
       </div>
     </th>
   );

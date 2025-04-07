@@ -1,3 +1,9 @@
+import * as React from "react";
+
+interface IconProps extends React.SVGProps<SVGSVGElement> {
+  className?: string;
+}
+
 import { default as AlertIcon } from "@/shared/infra/presentation/assets/images/alert_icon.svg";
 import { default as ExperimentIcon } from "@/shared/infra/presentation/assets/images/experiment_icon.svg";
 import { default as GithubIcon } from "@/shared/infra/presentation/assets/images/github_icon.svg";
@@ -39,3 +45,41 @@ export {
   PencilIcon,
   LogoutIcon,
 };
+
+export const ArrowDownIcon = ({ className, ...props }: IconProps) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+    {...props}
+  >
+    <path d="M12 5v14" />
+    <path d="m19 12-7 7-7-7" />
+  </svg>
+);
+
+export const ArrowUpIcon = ({ className, ...props }: IconProps) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+    {...props}
+  >
+    <path d="M12 19V5" />
+    <path d="m5 12 7-7 7 7" />
+  </svg>
+);

@@ -13,6 +13,7 @@ const ProfessorsPage = ({}) => {
   const [professors, setProfessors] = useState<GetProfessorsResponseDTO>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { getProfessors } = useAdmin();
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
 
   const handleGetProfessors = async () => {
     try {
@@ -39,6 +40,32 @@ const ProfessorsPage = ({}) => {
     handleGetProfessors(); // Recarregar lista após fechar o modal
   };
 
+  const handleSort = (key: string) => {
+    let direction: 'asc' | 'desc' = 'desc';
+    
+    if (sortConfig && sortConfig.key === key) {
+      direction = sortConfig.direction === 'desc' ? 'asc' : 'desc';
+    }
+    
+    setSortConfig({ key, direction });
+    
+    setProfessors(prevProfessors => {
+      const sortedProfessors = [...prevProfessors];
+      sortedProfessors.sort((a, b) => {
+        const aValue = a[key as keyof typeof a];
+        const bValue = b[key as keyof typeof b];
+        
+        if (direction === 'asc') {
+          return aValue > bValue ? 1 : -1;
+        } else {
+          return aValue < bValue ? 1 : -1;
+        }
+      });
+      
+      return sortedProfessors;
+    });
+  };
+
   return (
     <div className="flex h-full flex-col">
       <AdminProfessorRegistrationModal isOpen={open} onClose={handleCloseModal}></AdminProfessorRegistrationModal>
@@ -58,13 +85,31 @@ const ProfessorsPage = ({}) => {
         <CustomTable.Root className="w-full min-w-[1000px]">
           <CustomTable.Header>
             <CustomTable.Row className="md:justify-between">
-              <CustomTable.Head className="w-[200px] md:w-[15%]" hasFilter>
+              <CustomTable.Head 
+                className="w-[200px] md:w-[15%]" 
+                hasFilter 
+                onSort={() => handleSort('registration_code')} 
+                sortDirection={sortConfig?.key === 'registration_code' ? sortConfig.direction : null}
+                isActiveSort={sortConfig?.key === 'registration_code'}
+              >
                 Matrícula
               </CustomTable.Head>
-              <CustomTable.Head className="w-[300px] md:w-[25%]" hasFilter>
+              <CustomTable.Head 
+                className="w-[300px] md:w-[25%]" 
+                hasFilter 
+                onSort={() => handleSort('name')} 
+                sortDirection={sortConfig?.key === 'name' ? sortConfig.direction : null}
+                isActiveSort={sortConfig?.key === 'name'}
+              >
                 Nome do Professor
               </CustomTable.Head>
-              <CustomTable.Head className="w-[300px] md:w-[25%]" hasFilter>
+              <CustomTable.Head 
+                className="w-[300px] md:w-[25%]" 
+                hasFilter 
+                onSort={() => handleSort('email')} 
+                sortDirection={sortConfig?.key === 'email' ? sortConfig.direction : null}
+                isActiveSort={sortConfig?.key === 'email'}
+              >
                 Email
               </CustomTable.Head>
               <CustomTable.Head className="w-[200px] md:w-[15%]">
