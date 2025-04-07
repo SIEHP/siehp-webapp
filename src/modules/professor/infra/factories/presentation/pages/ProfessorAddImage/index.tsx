@@ -1,7 +1,7 @@
 "use client";
 
 import { CustomDataField } from "@/shared/infra/presentation/components/CustomDataField";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ImageCreateValidationModal } from "@/shared/infra/presentation/components/ImageCreateValidationModal";
 import { ImageFileSelector } from "@/shared/infra/presentation/components/ImageFileSelector";
 import { useForm, Controller } from "react-hook-form";
@@ -17,6 +17,7 @@ const ProfessorAddImagePage = () => {
   const [openValidationModal, setOpenValidationModal] =
     useState<boolean>(false);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
+  const [cadastroSucesso, setCadastroSucesso] = useState<boolean>(false);
   const { createImage } = useImage();
 
   // Ensure empty tags array is initialized
@@ -42,6 +43,20 @@ const ProfessorAddImagePage = () => {
     resolver: zodResolver(professorAddImageSchema),
     defaultValues
   });
+
+  useEffect(() => {
+    // Verificar se não está mais em loading e o cadastro foi marcado como sucesso
+    if (!createImage.isPending && cadastroSucesso) {
+      // Limpar formulário quando o cadastro for concluído com sucesso
+      reset(defaultValues);
+      setImagePreviewUrl(null);
+      // Resetar o estado de sucesso após 3 segundos
+      const timer = setTimeout(() => {
+        setCadastroSucesso(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [createImage.isPending, cadastroSucesso, reset]);
 
   const handleOpenValidationModal = () => {
     setOpenValidationModal(true);
@@ -120,6 +135,9 @@ const ProfessorAddImagePage = () => {
           tags: formData.tags
         });
         
+        // Indicar que o cadastro foi realizado com sucesso
+        setCadastroSucesso(true);
+        
       } catch (error) {
         console.error('Erro ao salvar a imagem:', error);
         // Aqui você pode adicionar algum feedback visual para o usuário
@@ -165,6 +183,11 @@ const ProfessorAddImagePage = () => {
         }}
       />
       <div className="flex h-full w-full flex-col items-center gap-1 p-4 text-lg">
+        {cadastroSucesso && (
+          <div className="w-full bg-sucess p-2 text-center text-white rounded-lg mb-2">
+            Imagem cadastrada com sucesso!
+          </div>
+        )}
         <div className="h-[250px] w-full rounded-lg">
           <ImageFileSelector
             onFileSelect={handleImageSelect}
