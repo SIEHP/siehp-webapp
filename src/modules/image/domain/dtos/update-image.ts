@@ -2,17 +2,15 @@ import { z } from "zod";
 
 export const UpdateImageParamsSchema = z.object({
   id: z.number(),
-  title: z.string(),
-  piece_state: z.string(),
-  pick_date: z.date(),
-  tissue: z.string(),
-  copyright: z.string(),
-  description: z.string(),
-  image_tags: z.array(z.object({
-    id: z.number(),
-    name: z.string(),
-    status: z.string(),
-})).optional(),
+  title: z.string().optional(),
+  piece_state: z.string().optional(),
+  pick_date: z.union([z.string(), z.date(), z.null()]).optional(),
+  tissue: z.string().optional(),
+  copyright: z.string().optional(),
+  description: z.string().optional(),
+  url: z.string().optional(),
+  user_email: z.string().optional(),
+  tags: z.array(z.string()).optional(),
 });
 
 export type UpdateImageParamsDTO = z.infer<typeof UpdateImageParamsSchema>;
@@ -31,7 +29,7 @@ export const UpdateImageResponseSchema = z.object({
   updated_at: z.string().or(z.date()),
   created_by: z.number(),
   updated_by: z.number().nullable(),
-  image_tags: z.array(z.object({
+  tags: z.array(z.object({
       id: z.number(),
       name: z.string(),
       status: z.string(),

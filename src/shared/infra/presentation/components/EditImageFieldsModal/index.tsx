@@ -9,7 +9,7 @@ export interface ReceivedImageData {
   pick_date?: string;
   title?: string;
   description?: string;
-  image_tags?: {id: number, name: string, status: string}[];
+  tags?: {id: number, name: string, status: string}[];
 }
 
 export interface UpdatedImageData {
@@ -19,7 +19,7 @@ export interface UpdatedImageData {
   pick_date?: string;
   title?: string;
   description?: string;
-  image_tags?: string[];
+  tags?: string[];
 }
 
 interface IEditImageFieldsModalProps {
@@ -28,6 +28,8 @@ interface IEditImageFieldsModalProps {
   onConfirm: (updatedData: UpdatedImageData) => void;
   imagePreviewUrl?: string | null;
   imageData: ReceivedImageData;
+  isLoading?: boolean;
+  errorMessage?: string | null;
 }
 
 export function EditImageFieldsModal({
@@ -36,32 +38,49 @@ export function EditImageFieldsModal({
   onConfirm,
   imageData,
   imagePreviewUrl,
+  isLoading = false,
+  errorMessage = null,
 }: IEditImageFieldsModalProps) {
   const modalRef = React.useRef<HTMLDivElement>(null);
 
-  // Estados para campos editáveis
-  const [copyright, setCopyright] = useState(
-    imageData.copyright || "",
-  );
-  const [tissue, setTissue] = useState(imageData.tissue || "");
-  const [piece_state, setPieceState] = useState(imageData.piece_state || "");
-  const [pick_date, setPickDate] = useState(
-    imageData.pick_date || "",
-  );
-  const [title, setTitle] = useState(imageData.title || "");
-  const [description, setDescription] = useState(imageData.description || "");
-  const [image_tags, setImageTags] = useState<string[]>(imageData.image_tags?.map(tag => tag.name) || []);
+  // Função para formatar data no formato YYYY-MM-DD para input type="date"
+  const formatDateForInput = (dateString?: string): string => {
+    if (!dateString) return '';
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return '';
+      return date.toISOString().split('T')[0]; // Retorna no formato YYYY-MM-DD
+    } catch (error) {
+      console.error("Erro ao formatar data:", error);
+      return '';
+    }
+  };
 
-  // Atualiza os estados quando os props mudam
+  // Estados para campos editáveis
+  const [copyright, setCopyright] = useState("");
+  const [tissue, setTissue] = useState("");
+  const [piece_state, setPieceState] = useState("");
+  const [pick_date, setPickDate] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [tags, setImageTags] = useState<string[]>([]);
+
+  // Atualiza os estados quando o modal abre
   useEffect(() => {
     if (isOpen) {
       setCopyright(imageData.copyright || "");
       setTissue(imageData.tissue || "");
       setPieceState(imageData.piece_state || "");
-      setPickDate(imageData.pick_date || "");
+      setPickDate(formatDateForInput(imageData.pick_date));
       setTitle(imageData.title || "");
       setDescription(imageData.description || "");
-      setImageTags(imageData.image_tags?.map(tag => tag.name) || []);
+      
+      // Garante que as tags estejam corretamente formatadas
+      const formattedTags = Array.isArray(imageData.tags) 
+        ? imageData.tags.map(tag => typeof tag === 'string' ? tag : tag.name)
+        : [];
+      
+      setImageTags(formattedTags);
     }
   }, [isOpen, imageData]);
 
@@ -103,10 +122,14 @@ export function EditImageFieldsModal({
       pick_date,
       title,
       description,
-      image_tags,
+      tags,
     };
-    console.log("Dados atualizados:", updatedData);
+    
+    // Chama a função de confirmação com os dados atualizados
     onConfirm(updatedData);
+    
+    // Fecha o modal imediatamente após enviar os dados
+    onClose();
   };
 
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -230,7 +253,7 @@ export function EditImageFieldsModal({
                 <CustomDataField.Content className="text-md">
                   <CustomDataField.Tag
                     className="w-full"
-                    initialTags={image_tags}
+                    initialTags={tags}
                     onTagsChange={handleImageTagsChange}
                   />
                 </CustomDataField.Content>
@@ -242,8 +265,12 @@ export function EditImageFieldsModal({
             <button onClick={onClose} className="bg-fail">
               Cancelar
             </button>
-            <button onClick={handleConfirm} className="bg-sucess">
-              Salvar alterações
+            <button 
+              onClick={handleConfirm} 
+              className="bg-sucess"
+              disabled={isLoading}
+            >
+              {isLoading ? "Salvando..." : "Salvar alterações"}
             </button>
           </div>
         </div>

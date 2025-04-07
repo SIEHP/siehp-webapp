@@ -1,11 +1,9 @@
-
-
 import { useMutation } from "@tanstack/react-query";
 import { CreateImageParamsDTO, CreateImageResponseDTO } from "@/modules/image/domain/dtos/create-image";
 import { RemoteError } from "@/shared/domain/errors/remote-error";
 import { CreateImage } from "../data/usecases/create-image";
 import { ListImage } from "../data/usecases/list-image";
-import { UpdateImage } from "@/modules/user/infra/services/data/usecases/update-image";
+import { UpdateImage } from "../data/usecases/update-image";
 import { UpdateImageParamsDTO } from "@/modules/image/domain/dtos/update-image";
 
 const useImage = () => {
