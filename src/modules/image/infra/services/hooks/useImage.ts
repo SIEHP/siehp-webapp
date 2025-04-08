@@ -21,7 +21,8 @@ const useImage = () => {
     });
 
     const handleCreateImage = useCallback(async (data: CreateImageParamsDTO) => {
-        await createImage(data);
+        const result = await createImage(data);
+        return result;
     }, [createImage]);
 
     const handleListImage = useCallback(async () => {

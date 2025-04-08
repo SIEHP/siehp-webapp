@@ -414,7 +414,7 @@ const ProfessorImagesBankPage = ({}) => {
   };
 
   return (
-    <div className="flex h-full w-full flex-col items-center gap-1 overflow-y-auto p-4">
+    <div className="flex h-full w-full flex-col items-center gap-1 overflow-y-auto p-2">
       <ProfessorPagesHeader.Root>
         <ProfessorPagesHeader.Title>Filtros:</ProfessorPagesHeader.Title>
         <ProfessorPagesHeader.Body className="w-full justify-start xl:justify-end">
@@ -515,7 +515,7 @@ const ProfessorImagesBankPage = ({}) => {
       
       <hr className="w-full rounded-full border-[1px] border-[#7C7C7C]" />
 
-      <div className="grid w-full grid-cols-1 gap-4 py-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="flex w-full flex-wrap justify-evenly gap-2">
         {filteredImages.length > 0 ? (
           filteredImages.map((image) => (
             <ImageBankItem
