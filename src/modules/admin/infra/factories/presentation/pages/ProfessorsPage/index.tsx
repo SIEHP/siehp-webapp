@@ -2,20 +2,28 @@
 
 import { AdminPagesHeader } from "../../../../../../../shared/infra/presentation/components/AdminPagesHeader";
 import { CustomTable } from "../../../../../../../shared/infra/presentation/components/CustomTable";
-import { AddPeopleIcon } from "../../../../../../../shared/infra/presentation/components/Icons";
-import { useState, useEffect } from "react";
+import { AddPeopleIcon, ThreeDotsIcon } from "../../../../../../../shared/infra/presentation/components/Icons";
+import { useState, useEffect, useRef } from "react";
 import { AdminProfessorRegistrationModal } from "@/shared/infra/presentation/components/AdminProfessorRegistrationModal";
 import useAdmin from "@/modules/user/infra/services/hooks/useAdmin";
 import { GetProfessorsResponseDTO } from "@/modules/user/domain/dtos/get-professors";
+import { AlertDialog } from "@/shared/infra/presentation/components/AlertDialog";
 
 const ProfessorsPage = ({}) => {
   const [open, setOpen] = useState<boolean>(false);
   const [professors, setProfessors] = useState<GetProfessorsResponseDTO>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const { getProfessors } = useAdmin();
+  const { getProfessors, changeUserStatus } = useAdmin();
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState<number | null>(null);
+  const [isStatusChangeDialogOpen, setIsStatusChangeDialogOpen] = useState<boolean>(false);
+  const [selectedProfessorId, setSelectedProfessorId] = useState<number | null>(null);
+  const [isChangingStatus, setIsChangingStatus] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleGetProfessors = async () => {
+  // Função para buscar professores
+  const fetchProfessors = async () => {
     try {
       setLoading(true);
       const response = await getProfessors.handleGetProfessors();
@@ -27,8 +35,23 @@ const ProfessorsPage = ({}) => {
     }
   };
 
+  // Carregar professores apenas uma vez ao montar o componente
   useEffect(() => {
-    handleGetProfessors();
+    fetchProfessors();
+  }, []); // Sem dependências para executar apenas uma vez
+
+  // Fechar dropdown quando clicar fora
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   const handleOpenModal = () => {
@@ -37,7 +60,7 @@ const ProfessorsPage = ({}) => {
 
   const handleCloseModal = () => {
     setOpen(false);
-    handleGetProfessors(); // Recarregar lista após fechar o modal
+    fetchProfessors(); // Recarregar lista após fechar o modal
   };
 
   const handleSort = (key: string) => {
@@ -64,6 +87,51 @@ const ProfessorsPage = ({}) => {
       
       return sortedProfessors;
     });
+  };
+
+  const handleMoreClick = (e: React.MouseEvent, professorId: number) => {
+    e.stopPropagation();
+    setIsDropdownOpen(prev => prev === professorId ? null : professorId);
+  };
+
+  const handleChangeStatusClick = (professorId: number) => {
+    setIsDropdownOpen(null);
+    setSelectedProfessorId(professorId);
+    setIsStatusChangeDialogOpen(true);
+  };
+
+  const handleChangeStatusConfirm = async () => {
+    if (!selectedProfessorId) {
+      setError("ID do professor não encontrado");
+      return;
+    }
+
+    setIsChangingStatus(true);
+    setError(null);
+
+    try {
+
+      
+      const params = { userId: selectedProfessorId };
+      
+      // Adicionando try/catch específico para a chamada da API
+      try {
+       await changeUserStatus.handleChangeUserStatus(params);
+      } catch (apiError) {
+        throw apiError; // Re-throw para ser capturado pelo catch externo
+      }
+      
+      
+      // Fechar o diálogo
+      setIsStatusChangeDialogOpen(false);
+      
+      // Atualizar a lista de professores diretamente
+      await fetchProfessors();
+    } catch (err: any) {
+      setError(err?.message || "Erro ao alterar status do professor. Tente novamente.");
+    } finally {
+      setIsChangingStatus(false);
+    }
   };
 
   return (
@@ -140,7 +208,29 @@ const ProfessorsPage = ({}) => {
                   >
                     {professor.status === "ACTIVE" ? "Ativo" : "Inativo"}
                   </CustomTable.CellStatus>
-                  <CustomTable.CellMenu />
+                  <CustomTable.Cell className="relative">
+                    <div ref={dropdownRef}>
+                      <button
+                        onClick={(e) => handleMoreClick(e, professor.id)}
+                        className="inline-flex items-center justify-center hover:bg-gray-100 rounded-full p-1"
+                        title="Mais opções"
+                      >
+                        <ThreeDotsIcon width={16} height={16} />
+                      </button>
+                      
+                      {/* Dropdown menu */}
+                      {isDropdownOpen === professor.id && (
+                        <div className="absolute right-0 w-36 rounded-md shadow-lg bg-gray-500-tk z-10">
+                          <button
+                            onClick={() => handleChangeStatusClick(professor.id)}
+                            className="w-full px-1 py-0.5 text-sm text-left text-gray-900-tk hover:bg-gray-400-tk"
+                          >
+                            {professor.status === "ACTIVE" ? "Desativar" : "Ativar"}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </CustomTable.Cell>
                 </CustomTable.Row>
               ))
             ) : (
@@ -151,6 +241,41 @@ const ProfessorsPage = ({}) => {
           </CustomTable.Body>
         </CustomTable.Root>
       </div>
+
+      {/* Diálogo de confirmação de alteração de status */}
+      <AlertDialog.Root open={isStatusChangeDialogOpen} onOpenChange={setIsStatusChangeDialogOpen}>
+        <AlertDialog.Portal>
+          <AlertDialog.Overlay />
+          <AlertDialog.Content>
+            <AlertDialog.Title>Confirmar alteração de status</AlertDialog.Title>
+            <AlertDialog.Description className="text-gray-100-tk">
+              Tem certeza que deseja alterar o status deste professor? Esta ação pode ser desfeita posteriormente.
+            </AlertDialog.Description>
+            {error && (
+              <div className="mt-1 text-red-500 text-sm">{error}</div>
+            )}
+            <div className="flex justify-between gap-2 mt-1">
+              <AlertDialog.Cancel asChild>
+                <button 
+                  className="px-1 py-1 rounded-md bg-fail text-gray-100-tk hover:bg-gray-400-tk font-regular"
+                  disabled={isChangingStatus}
+                >
+                  Cancelar
+                </button>
+              </AlertDialog.Cancel>
+              <AlertDialog.Action asChild>
+                <button 
+                  className="px-1 py-1 rounded-md bg-sucess text-gray-100-tk hover:bg-opacity-90 font-regular"
+                  onClick={handleChangeStatusConfirm}
+                  disabled={isChangingStatus}
+                >
+                  {isChangingStatus ? "Alterando..." : "Confirmar"}
+                </button>
+              </AlertDialog.Action>
+            </div>
+          </AlertDialog.Content>
+        </AlertDialog.Portal>
+      </AlertDialog.Root>
     </div>
   );
 };
