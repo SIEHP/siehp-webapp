@@ -35,7 +35,6 @@ api.interceptors.request.use((config) => {
 // Adicionar interceptor para depurar respostas
 api.interceptors.response.use(
   (response) => {
-    console.log(`[API Response Success] ${response.status} ${response.config.url}`, response.data);
     return response;
   },
   (error) => {
