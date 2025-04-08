@@ -14,7 +14,7 @@ const AuthenticatedLayout = ({ children }: AuthenticatedLayoutProps) => {
 
   return (
     <>
-      <div className="flex h-dvh w-dvw flex-row relative">
+      <div className="flex max-h-dvh h-dvh w-dvw flex-row relative">
         <SideBar.Root>
           <SideBar.Logo />
           <SideBar.ItemContainer>
@@ -34,7 +34,7 @@ const AuthenticatedLayout = ({ children }: AuthenticatedLayoutProps) => {
             userRole={auth?.user.role ?? ""}
           />
         </SideBar.Root>
-        <div className="h-full w-full">{children}</div>
+        <div className="h-full w-full overflow-y-auto max-h-dvh">{children}</div>
       </div>
     </>
   );

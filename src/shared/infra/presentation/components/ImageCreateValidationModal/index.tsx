@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import Image from "next/image";
+import { useToastStore } from "@/shared/infra/services/hooks/useToast";
 
 
 interface IImageCreateValidationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: () => Promise<any>;
   imagePreviewUrl?: string | null;
   imageData: {
     direitosImagem?: string;
@@ -26,9 +27,41 @@ export function ImageCreateValidationModal({
   imageData,
 }: IImageCreateValidationModalProps) {
   const modalRef = React.useRef<HTMLDivElement>(null);
+  const { toast } = useToastStore();
+  const [isLoading, setIsLoading] = useState(false);
+  
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       onClose(); // Fecha o modal se clicar fora dele
+    }
+  };
+
+  const handleToastConfirm = async () => {
+    try {
+      setIsLoading(true);
+      const response = await onConfirm(); // Aguarda a resposta da API
+      
+      if (response && response.success) {
+        toast.success("Imagem cadastrada com sucesso!", { 
+          position: "topRight",
+          direction: "fadeUp"
+        });
+        onClose(); // Fecha o modal após sucesso
+      } else {
+        const errorMessage = response?.message || "Erro ao cadastrar imagem. Tente novamente.";
+        toast.error(errorMessage, { 
+          position: "topRight",
+          direction: "fadeUp"
+        });
+      }
+    } catch (error) {
+      console.error("Erro ao cadastrar imagem:", error);
+      toast.error("Erro ao cadastrar imagem. Tente novamente.", { 
+        position: "topRight",
+        direction: "fadeUp"
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -150,11 +183,19 @@ export function ImageCreateValidationModal({
           </div>
 
           <div className="flex w-full items-center justify-between gap-1 text-md md:flex-row [&>button]:rounded-lg [&>button]:px-2 [&>button]:py-1 [&>button]:text-gray-100-tk">
-            <button onClick={onClose} className="bg-fail">
+            <button 
+              onClick={onClose} 
+              className="bg-fail"
+              disabled={isLoading}
+            >
               Voltar
             </button>
-            <button onClick={onConfirm} className="bg-sucess">
-              Confirmar
+            <button 
+              onClick={handleToastConfirm} 
+              className="bg-sucess"
+              disabled={isLoading}
+            >
+              {isLoading ? "Processando..." : "Confirmar"}
             </button>
           </div>
         </div>

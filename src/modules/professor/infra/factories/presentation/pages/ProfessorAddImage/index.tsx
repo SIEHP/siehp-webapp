@@ -67,8 +67,6 @@ const ProfessorAddImagePage = () => {
   };
 
   const handleConfirmValidation = async () => {
-    setOpenValidationModal(false);
-    
     if (formData.imageFile) {
       try {
         // Criar um FormData para enviar o arquivo
@@ -124,7 +122,7 @@ const ProfessorAddImagePage = () => {
         });
         
         // Agora usamos a URL gerada no createImage com data formatada
-        createImage.handleCreateImage({ 
+        const result = await createImage.handleCreateImage({ 
           title: formData.tituloImagem, 
           url: imageUrl, 
           piece_state: formData.estadoPeca,
@@ -135,14 +133,32 @@ const ProfessorAddImagePage = () => {
           tags: formData.tags
         });
         
-        // Indicar que o cadastro foi realizado com sucesso
-        setCadastroSucesso(true);
+        // Indicar que o cadastro foi realizado com sucesso quando a requisição for bem-sucedida
+        if (result) {
+          setCadastroSucesso(true);
+        }
+        
+        // Retornar resultado com status de sucesso para o modal
+        return {
+          success: true,
+          data: result
+        };
         
       } catch (error) {
         console.error('Erro ao salvar a imagem:', error);
-        // Aqui você pode adicionar algum feedback visual para o usuário
+        // Retornar resultado com status de erro para o modal
+        return {
+          success: false,
+          message: error instanceof Error ? error.message : 'Erro ao cadastrar imagem. Tente novamente.'
+        };
       }
     }
+    
+    // Se não houver arquivo de imagem, retornar erro
+    return {
+      success: false,
+      message: 'Nenhuma imagem selecionada.'
+    };
   };
 
   const handleImageSelect = (file: File | null) => {
@@ -182,12 +198,7 @@ const ProfessorAddImagePage = () => {
           tags: formData.tags,
         }}
       />
-      <div className="flex h-full w-full flex-col items-center gap-1 p-4 text-lg">
-        {cadastroSucesso && (
-          <div className="w-full bg-sucess p-2 text-center text-white rounded-lg mb-2">
-            Imagem cadastrada com sucesso!
-          </div>
-        )}
+      <div className="flex h-full w-full flex-col items-center gap-1 p-2 text-lg">
         <div className="h-[250px] w-full rounded-lg">
           <ImageFileSelector
             onFileSelect={handleImageSelect}

@@ -47,7 +47,7 @@ const SideBarRoot = ({ children }: SideBarRootProps) => {
         </svg>
       </button>
       <aside
-        className={`absolute left-0 top-0 z-10 flex h-dvh max-h-dvh min-w-[380px] flex-col items-center justify-between bg-gray-700 pt-4 transition-all lg:relative lg:translate-x-0 ${
+        className={`absolute left-0 top-0 z-10 flex h-dvh max-h-dvh min-w-[380px] flex-col items-center justify-between bg-gray-700 pt-2 transition-all lg:relative lg:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -74,7 +74,7 @@ const SideBarLogo = () => {
 
 const SideBarItemContainer = ({ children }: SideBarItemContainerProps) => {
   return (
-    <div className="flex h-full w-full flex-col items-start justify-start gap-2.5 overflow-y-auto px-3 py-4">
+    <div className="flex h-full w-full flex-col items-start justify-start gap-2.5 overflow-y-auto px-2 py-2">
       {children}
     </div>
   );

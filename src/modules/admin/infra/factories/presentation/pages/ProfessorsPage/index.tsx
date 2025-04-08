@@ -67,9 +67,9 @@ const ProfessorsPage = ({}) => {
   };
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col p-2">
       <AdminProfessorRegistrationModal isOpen={open} onClose={handleCloseModal}></AdminProfessorRegistrationModal>
-      <AdminPagesHeader.Root className="pt-4 pl-4 pr-4 md:gap-0 gap-1 items-start flex-col md:flex-row flex">
+      <AdminPagesHeader.Root className="md:gap-0 gap-1 items-start flex-col md:flex-row flex">
         <AdminPagesHeader.Title >Professores</AdminPagesHeader.Title>
         <AdminPagesHeader.Body className="flex flex-col md:flex-row md:ml-auto gap-1 items-start md:items-center">
             <AdminPagesHeader.ButtonContent>
@@ -81,8 +81,8 @@ const ProfessorsPage = ({}) => {
             <AdminPagesHeader.Filter />
         </AdminPagesHeader.Body>
       </AdminPagesHeader.Root>
-      <div className="flex-1 p-4 overflow-auto">
-        <CustomTable.Root className="w-full min-w-[1000px]">
+      <div className="flex-1 overflow-auto py-2">
+        <CustomTable.Root className="w-full min-w-[800px]">
           <CustomTable.Header>
             <CustomTable.Row className="md:justify-between">
               <CustomTable.Head 

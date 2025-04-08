@@ -11,6 +11,8 @@ module.exports = {
         contentShow: "contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1)",
         slideDown: "slideDown 150ms ease-out",
         slideUp: "slideUp 150ms ease-in",
+        fadeUp: "fadeUp 300ms ease-out",
+        fadeLeft: "fadeLeft 300ms ease-out",
       },
       keyframes: {
         overlayShow: {
@@ -37,6 +39,14 @@ module.exports = {
             opacity: "1",
           },
           to: { height: "0px", opacity: "0" },
+        },
+        fadeUp: {
+          from: { opacity: "0", transform: "translateY(10%)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        fadeLeft: {
+          from: { opacity: "0", transform: "translateX(10%)" },
+          to: { opacity: "1", transform: "translateX(0)" },
         },
       },
     },
