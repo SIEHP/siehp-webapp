@@ -2,6 +2,7 @@ import {
   ChangeUserStatusParamsDTO,
   ChangeUserStatusParamsSchema,
   ChangeUserStatusResponseDTO,
+  ChangeUserStatusResponseSchema,
 } from "@/modules/user/domain/dtos/change-user-status";
 import { ApiError } from "@/shared/domain/models";
 import api from "@/shared/infra/services/api";
@@ -20,7 +21,7 @@ export class ChangeUserStatus {
 
     const error = checkApiError({
       data: httpResponse.data,
-      schema: ChangeUserStatusParamsSchema,
+      schema: ChangeUserStatusResponseSchema,
     });
 
     if (error) {

@@ -22,7 +22,8 @@ const ProfessorsPage = ({}) => {
   const [error, setError] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleGetProfessors = async () => {
+  // Função para buscar professores
+  const fetchProfessors = async () => {
     try {
       setLoading(true);
       const response = await getProfessors.handleGetProfessors();
@@ -34,9 +35,10 @@ const ProfessorsPage = ({}) => {
     }
   };
 
+  // Carregar professores apenas uma vez ao montar o componente
   useEffect(() => {
-    handleGetProfessors();
-  }, []);
+    fetchProfessors();
+  }, []); // Sem dependências para executar apenas uma vez
 
   // Fechar dropdown quando clicar fora
   useEffect(() => {
@@ -58,7 +60,7 @@ const ProfessorsPage = ({}) => {
 
   const handleCloseModal = () => {
     setOpen(false);
-    handleGetProfessors(); // Recarregar lista após fechar o modal
+    fetchProfessors(); // Recarregar lista após fechar o modal
   };
 
   const handleSort = (key: string) => {
@@ -108,17 +110,23 @@ const ProfessorsPage = ({}) => {
     setError(null);
 
     try {
-      console.log("ENTROU NA FUNÇÃO !!!")
-      await changeUserStatus.handleChangeUserStatus({ userId: selectedProfessorId });
+
       
-      const professor = professors.find(p => p.id === selectedProfessorId);
-      const newStatus = professor?.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
-      const statusText = newStatus === "ACTIVE" ? "ativado" : "desativado";
+      const params = { userId: selectedProfessorId };
       
+      // Adicionando try/catch específico para a chamada da API
+      try {
+       await changeUserStatus.handleChangeUserStatus(params);
+      } catch (apiError) {
+        throw apiError; // Re-throw para ser capturado pelo catch externo
+      }
+      
+      
+      // Fechar o diálogo
       setIsStatusChangeDialogOpen(false);
-      handleGetProfessors();
       
-      console.log(`Professor ${statusText} com sucesso!`);
+      // Atualizar a lista de professores diretamente
+      await fetchProfessors();
     } catch (err: any) {
       setError(err?.message || "Erro ao alterar status do professor. Tente novamente.");
     } finally {

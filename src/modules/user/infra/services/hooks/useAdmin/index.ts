@@ -55,7 +55,8 @@ const useAdmin = () => {
   });
 
   const handleChangeUserStatus = async (data: ChangeUserStatusParamsDTO) => {
-    await changeUserStatus(data);
+    const result = await changeUserStatus(data);
+    return result;
   };
 
   return {
