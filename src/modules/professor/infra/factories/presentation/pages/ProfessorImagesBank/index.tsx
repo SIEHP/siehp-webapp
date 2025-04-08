@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { ProfessorPagesHeader } from "@/shared/infra/presentation/components/ProfessorPagesHeader";
 import { CustomDataField } from "@/shared/infra/presentation/components/CustomDataField";
 import { ImageBankItem } from "@/shared/infra/presentation/components/ImageBankIten";
@@ -173,14 +173,7 @@ const ProfessorImagesBankPage = ({}) => {
     }
   };
 
-  // Fetch images on component mount and when auth changes
-  useEffect(() => {
-    if (auth?.token) {
-      fetchImages();
-    }
-  }, [auth]);
-
-  const fetchImages = async () => {
+  const fetchImages = useCallback(async () => {
     try {
       const response = await listImage.handleListImage();
       setImages(response);
@@ -188,7 +181,14 @@ const ProfessorImagesBankPage = ({}) => {
     } catch (error) {
       console.error("Error fetching images:", error);
     }
-  };
+  }, [listImage]);
+
+  // Fetch images on component mount and when auth changes
+  useEffect(() => {
+    if (auth?.token) {
+      fetchImages();
+    }
+  }, [auth, fetchImages, listImage]);
 
   const handleImageDeleted = async (imageId: number) => {
     // Refresh the image list after deletion
