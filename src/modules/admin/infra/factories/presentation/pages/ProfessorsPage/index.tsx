@@ -3,24 +3,29 @@
 import { AdminPagesHeader } from "../../../../../../../shared/infra/presentation/components/AdminPagesHeader";
 import { CustomTable } from "../../../../../../../shared/infra/presentation/components/CustomTable";
 import { AddPeopleIcon, ThreeDotsIcon } from "../../../../../../../shared/infra/presentation/components/Icons";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { AdminProfessorRegistrationModal } from "@/shared/infra/presentation/components/AdminProfessorRegistrationModal";
 import useAdmin from "@/modules/user/infra/services/hooks/useAdmin";
 import { GetProfessorsResponseDTO } from "@/modules/user/domain/dtos/get-professors";
 import { AlertDialog } from "@/shared/infra/presentation/components/AlertDialog";
+import { useToastStore } from "@/shared/infra/services/hooks/useToast";
 
 const ProfessorsPage = ({}) => {
   const [open, setOpen] = useState<boolean>(false);
   const [professors, setProfessors] = useState<GetProfessorsResponseDTO>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { getProfessors, changeUserStatus } = useAdmin();
+  const { toast } = useToastStore();
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState<number | null>(null);
   const [isStatusChangeDialogOpen, setIsStatusChangeDialogOpen] = useState<boolean>(false);
   const [selectedProfessorId, setSelectedProfessorId] = useState<number | null>(null);
+  const [selectedProfessorStatus, setSelectedProfessorStatus] = useState<string | null>(null);
   const [isChangingStatus, setIsChangingStatus] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  
+  // Removendo a única referência e usando um callback ref
+  const dropdownRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
 
   // Função para buscar professores
   const fetchProfessors = async () => {
@@ -43,8 +48,12 @@ const ProfessorsPage = ({}) => {
   // Fechar dropdown quando clicar fora
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(null);
+      // Verifica se o clique foi fora de qualquer dropdown aberto
+      if (isDropdownOpen !== null) {
+        const currentDropdownRef = dropdownRefs.current[isDropdownOpen];
+        if (currentDropdownRef && !currentDropdownRef.contains(event.target as Node)) {
+          setIsDropdownOpen(null);
+        }
       }
     };
 
@@ -52,6 +61,11 @@ const ProfessorsPage = ({}) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+  }, [isDropdownOpen]);
+
+  // Função para registrar a ref de um dropdown
+  const setDropdownRef = useCallback((element: HTMLDivElement | null, id: number) => {
+    dropdownRefs.current[id] = element;
   }, []);
 
   const handleOpenModal = () => {
@@ -94,9 +108,10 @@ const ProfessorsPage = ({}) => {
     setIsDropdownOpen(prev => prev === professorId ? null : professorId);
   };
 
-  const handleChangeStatusClick = (professorId: number) => {
+  const handleChangeStatusClick = (professorId: number, status: string) => {
     setIsDropdownOpen(null);
     setSelectedProfessorId(professorId);
+    setSelectedProfessorStatus(status);
     setIsStatusChangeDialogOpen(true);
   };
 
@@ -110,17 +125,18 @@ const ProfessorsPage = ({}) => {
     setError(null);
 
     try {
-
-      
       const params = { userId: selectedProfessorId };
       
       // Adicionando try/catch específico para a chamada da API
       try {
-       await changeUserStatus.handleChangeUserStatus(params);
+        await changeUserStatus.handleChangeUserStatus(params);
+        
+        // Exibe toast de sucesso com a mensagem apropriada
+        const acao = selectedProfessorStatus === "ACTIVE" ? "desativado" : "ativado";
+        toast.success(`Professor foi ${acao} com sucesso!`);
       } catch (apiError) {
         throw apiError; // Re-throw para ser capturado pelo catch externo
       }
-      
       
       // Fechar o diálogo
       setIsStatusChangeDialogOpen(false);
@@ -129,6 +145,9 @@ const ProfessorsPage = ({}) => {
       await fetchProfessors();
     } catch (err: any) {
       setError(err?.message || "Erro ao alterar status do professor. Tente novamente.");
+      // Exibe toast de erro
+      const acao = selectedProfessorStatus === "ACTIVE" ? "desativar" : "ativar";
+      toast.error(`Erro ao ${acao} o professor: ${err?.message || "Falha na operação"}`);
     } finally {
       setIsChangingStatus(false);
     }
@@ -209,7 +228,7 @@ const ProfessorsPage = ({}) => {
                     {professor.status === "ACTIVE" ? "Ativo" : "Inativo"}
                   </CustomTable.CellStatus>
                   <CustomTable.Cell className="relative">
-                    <div ref={dropdownRef}>
+                    <div ref={(el) => setDropdownRef(el, professor.id)}>
                       <button
                         onClick={(e) => handleMoreClick(e, professor.id)}
                         className="inline-flex items-center justify-center hover:bg-gray-100 rounded-full p-1"
@@ -222,7 +241,7 @@ const ProfessorsPage = ({}) => {
                       {isDropdownOpen === professor.id && (
                         <div className="absolute right-0 w-36 rounded-md shadow-lg bg-gray-500-tk z-10">
                           <button
-                            onClick={() => handleChangeStatusClick(professor.id)}
+                            onClick={() => handleChangeStatusClick(professor.id, professor.status)}
                             className="w-full px-1 py-0.5 text-sm text-left text-gray-900-tk hover:bg-gray-400-tk"
                           >
                             {professor.status === "ACTIVE" ? "Desativar" : "Ativar"}

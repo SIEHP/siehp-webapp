@@ -93,27 +93,6 @@ const ProfessorImagesBankPage = ({}) => {
         updateImageData.piece_state = updatedData.piece_state.trim();
       }
       
-      if (updatedData.pick_date && updatedData.pick_date.trim() !== "") {
-        try {
-          // Assegurar que a data está no formato ISO completo para o backend
-          const dateObj = new Date(updatedData.pick_date);
-          
-          // Verificar se a data é válida
-          if (!isNaN(dateObj.getTime())) {
-            // Usar formato ISO string que o backend espera
-            updateImageData.pick_date = dateObj.toISOString();
-            console.log("Data formatada para envio:", updateImageData.pick_date);
-          } else {
-            console.warn("Data inválida, não incluindo no payload:", updatedData.pick_date);
-          }
-        } catch (error) {
-          console.error("Erro ao processar data:", error);
-        }
-      } else {
-        // Enviar null explicitamente para remover a data se o campo estiver vazio
-        updateImageData.pick_date = null;
-      }
-      
       if (updatedData.tissue && updatedData.tissue.trim() !== "") {
         updateImageData.tissue = updatedData.tissue.trim();
       }
@@ -126,6 +105,10 @@ const ProfessorImagesBankPage = ({}) => {
         updateImageData.description = updatedData.description.trim();
       }
       
+      if (updatedData.pick_date) {
+        updateImageData.pick_date = updatedData.pick_date;
+      }
+
       // SEMPRE enviar as tags, independentemente de terem sido alteradas ou não
       // Usar as tags do formulário se existirem, senão, usar as tags originais da imagem
       const tagsToSend = updatedData.tags || [];
@@ -181,14 +164,14 @@ const ProfessorImagesBankPage = ({}) => {
     } catch (error) {
       console.error("Error fetching images:", error);
     }
-  }, [listImage]);
+  }, []);
 
   // Fetch images on component mount and when auth changes
   useEffect(() => {
     if (auth?.token) {
       fetchImages();
     }
-  }, [auth, fetchImages, listImage]);
+  }, [auth, fetchImages]);
 
   const handleImageDeleted = async (imageId: number) => {
     // Refresh the image list after deletion
@@ -528,7 +511,7 @@ const ProfessorImagesBankPage = ({}) => {
                   copyright: image.copyright,
                   tissue: image.tissue,
                   piece_state: image.piece_state,
-                  pick_date: image.pick_date ? formatDateForInput(image.pick_date) : formatDateForInput(image.created_at),
+                  pick_date: image.pick_date,
                   title: image.title,
                   description: image.description,
                   tags: image.tags || [],
@@ -543,7 +526,7 @@ const ProfessorImagesBankPage = ({}) => {
                   copyright: image.copyright,
                   tissue: image.tissue,
                   piece_state: image.piece_state,
-                  pick_date: image.pick_date ? formatDateForInput(image.pick_date) : formatDateForInput(image.created_at),
+                  pick_date: image.pick_date,
                   title: image.title,
                   description: image.description,
                   tags: image.tags || [],

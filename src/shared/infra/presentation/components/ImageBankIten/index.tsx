@@ -16,6 +16,7 @@ import {
 import { ViewImageModal } from "../ViewImageModal";
 import { AlertDialog } from "../AlertDialog";
 import useImage from "@/modules/image/infra/services/hooks/useImage";
+import { useToastStore } from "@/shared/infra/services/hooks/useToast";
 
 export function ImageBankItem({
   imageUrl,
@@ -34,6 +35,7 @@ export function ImageBankItem({
   const [error, setError] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { deleteImage } = useImage();
+  const { toast } = useToastStore();
 
   const handleViewClick = () => {
     setIsViewModalOpen(true);
@@ -54,6 +56,7 @@ export function ImageBankItem({
   const handleDeleteConfirm = async () => {
     if (!imageId) {
       setError("ID da imagem não encontrado");
+      toast.error("ID da imagem não encontrado");
       return;
     }
 
@@ -63,9 +66,12 @@ export function ImageBankItem({
     try {
       await deleteImage.handleDeleteImage(imageId);
       setIsDeleteDialogOpen(false);
+      toast.success("Imagem excluída com sucesso!");
       if (onDelete) onDelete(imageId);
     } catch (err: any) {
-      setError(err?.message || "Erro ao excluir imagem. Tente novamente.");
+      const errorMessage = err?.message || "Erro ao excluir imagem. Tente novamente.";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsDeleting(false);
     }

@@ -1,12 +1,13 @@
 import React, { useState, useEffect, ChangeEvent, useRef } from "react";
 import Image from "next/image";
 import { CustomDataField } from "@/shared/infra/presentation/components/CustomDataField";
+import { useToastStore } from "@/shared/infra/services/hooks/useToast";
 
 export interface ReceivedImageData {
   copyright?: string;
   tissue?: string;
   piece_state?: string;
-  pick_date?: string;
+  pick_date?: Date;
   title?: string;
   description?: string;
   tags?: {id: number, name: string, status: string}[];
@@ -16,7 +17,7 @@ export interface UpdatedImageData {
   copyright?: string;
   tissue?: string;
   piece_state?: string;
-  pick_date?: string;
+  pick_date?: Date;
   title?: string;
   description?: string;
   tags?: string[];
@@ -42,6 +43,7 @@ export function EditImageFieldsModal({
   errorMessage = null,
 }: IEditImageFieldsModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToastStore();
   // Extrair os dados da imagem do prop imageData
   const { copyright = '', tissue = '', piece_state = '', pick_date = '', title = '', description = '', tags = [] } = imageData;
   
@@ -82,7 +84,7 @@ export function EditImageFieldsModal({
       setUpdatedCopyright(copyright);
       setUpdatedTissue(tissue);
       setUpdatedPieceState(piece_state);
-      setUpdatedPickDate(formatDateForInput(pick_date));
+      setUpdatedPickDate(pick_date);
       setUpdatedTitle(title);
       setUpdatedDescription(description);
       
@@ -126,17 +128,29 @@ export function EditImageFieldsModal({
       copyright: updatedCopyright,
       tissue: updatedTissue,
       piece_state: updatedPieceState,
-      pick_date: updatedPickDate,
+      pick_date: new Date(updatedPickDate),
       title: updatedTitle,
       description: updatedDescription,
       tags: updatedTags,
     };
     
-    // Chama a função de confirmação com os dados atualizados
-    onConfirm(updatedData);
-    
-    // Fecha o modal imediatamente após enviar os dados
-    onClose();
+    try {
+      // Chama a função de confirmação com os dados atualizados
+      onConfirm(updatedData);
+      
+      // Se não houver erro, considera que foi bem-sucedido
+      // Como o errorMessage é passado como prop, ele será atualizado pelo componente pai
+      if (!errorMessage) {
+        toast.success("Alterações salvas com sucesso!");
+      }
+      
+      // Fecha o modal imediatamente após enviar os dados
+      onClose();
+    } catch (error) {
+      // Em caso de erro, exibe mensagem de erro
+      console.log("MINHA PICA", error);
+      toast.error(errorMessage || "Ocorreu um erro ao salvar as alterações.");
+    }
   };
 
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -144,6 +158,13 @@ export function EditImageFieldsModal({
       onClose(); // Fecha o modal se clicar fora
     }
   };
+
+  useEffect(() => {
+    // Monitora mudanças no errorMessage para exibir toast de erro quando necessário
+    if (errorMessage) {
+      toast.error(errorMessage);
+    }
+  }, [errorMessage, toast]);
 
   if (!isOpen) return null;
 
@@ -221,7 +242,7 @@ export function EditImageFieldsModal({
                 <CustomDataField.Content className="text-md">
                   <CustomDataField.Date
                     className="sm:w-[260px] md:w-[300px]"
-                    defaultValue={updatedPickDate}
+                    defaultValue={new Date(updatedPickDate).toString()}
                     onChange={handlePickDateChange}
                   />
                 </CustomDataField.Content>

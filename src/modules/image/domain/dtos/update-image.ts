@@ -21,7 +21,7 @@ export const UpdateImageResponseSchema = z.object({
   status: z.string(),
   url: z.string(),
   piece_state: z.string(),
-  pick_date: z.date(),
+  pick_date: z.union([z.date(), z.string(), z.null()]),
   tissue: z.string(),
   copyright: z.string(),
   description: z.string(),

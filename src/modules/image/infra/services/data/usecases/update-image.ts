@@ -25,25 +25,6 @@ export class UpdateImage {
         title: data.title || originalImage.title
       };
       
-      // Verificar se pick_date está definido e garantir que está em formato válido
-      if (updatedData.pick_date) {
-        if (updatedData.pick_date instanceof Date) {
-          // Se já for uma instância de Date, converter para ISO string
-          updatedData.pick_date = updatedData.pick_date.toISOString();
-        } else if (typeof updatedData.pick_date === 'string' && updatedData.pick_date.trim() !== '') {
-          try {
-            // Se for string, tentar converter para Date e depois para ISO string
-            const dateObj = new Date(updatedData.pick_date);
-            if (!isNaN(dateObj.getTime())) {
-              updatedData.pick_date = dateObj.toISOString();
-            }
-          } catch (e) {
-            console.error("Erro ao processar data:", e);
-            delete updatedData.pick_date; // Remove se inválida
-          }
-        }
-      }
-      
       // Tratar as tags para evitar duplicações e problemas de unicidade
       if (data.tags !== undefined) {
         // Remover duplicações nas tags
