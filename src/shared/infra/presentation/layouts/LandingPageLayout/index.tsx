@@ -4,7 +4,7 @@ import Footer from "../../components/Footer";
 
 const LandingPageLayout = ({ children }: LandingPageLayoutProps) => {
   return (
-    <div className="flex h-full max-h-dvh w-full flex-col justify-between">
+    <div className="flex min-h-dvh w-full flex-col justify-between">
       <Header />
       {children}
       <Footer />

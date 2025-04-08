@@ -18,7 +18,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
   return (
     <html lang="pt-br" data-theme="normal">
       <body
-        className={`relative min-h-dvh [&>*::-webkit-scrollbar]:w-3 ${roboto.className}`}
+        className={`relative h-auto min-h-dvh [&>*::-webkit-scrollbar]:w-3 ${roboto.className}`}
       >
         {children}
         <ErrorAlert />
