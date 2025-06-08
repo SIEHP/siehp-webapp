@@ -1,4 +1,4 @@
-import { Auth } from "@/modules/user/domain/models";
+import { Auth } from "@/modules/user/infra/models";
 import { create } from "zustand";
 
 interface AuthStore {

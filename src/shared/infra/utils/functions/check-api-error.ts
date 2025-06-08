@@ -1,4 +1,4 @@
-import { ApiError } from "@/shared/domain/models";
+import { ApiError } from "@/shared/infra/models";
 import { ZodError, ZodSchema } from "zod";
 
 interface CheckApiErrorParams<T> {

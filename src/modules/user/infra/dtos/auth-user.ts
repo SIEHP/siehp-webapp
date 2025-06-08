@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AuthSchema } from "../models";
+import { AuthSchema } from "../../infra/models";
 
 export const AuthUserParamsSchema = z.object({
   email: z.string(),
