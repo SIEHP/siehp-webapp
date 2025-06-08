@@ -8,4 +8,5 @@ export interface PageInterface {
 export enum PagesEnum {
   HOME_PAGE = "HOME_PAGE",
   HELP = "HELP",
+  ADMIN = "ADMIN"
 }

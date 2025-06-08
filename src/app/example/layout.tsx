@@ -2,6 +2,5 @@ import MakeExampleLayout from "@/shared/infra/factories/layouts/MakeExampleLayou
 import { ReactNode } from "react";
 
 export default function ExampleLayout({ children }: { children: ReactNode }) {
-  // return <MakeExampleLayout>{children}</MakeExampleLayout>;
-  return <></>;
+  return <MakeExampleLayout>{children}</MakeExampleLayout>;
 }

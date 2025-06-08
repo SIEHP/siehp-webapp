@@ -15,11 +15,18 @@
     "test": "echo \"Success, running tests\"",
     "docker:up": "docker compose up --build -d",
     "docker:down": "docker compose down",
+    "docker:start": "docker compose start",
+    "docker:stop": "docker compose stop",
     "docker:restart": "docker compose restart",
+    "docker:exec": "docker compose exec -it app sh",
     "docker:logs": "docker compose logs -f",
     "docker:rebuild": "npm run docker:down && npm run docker:up"
   },
   "dependencies": {
+    "@radix-ui/react-alert-dialog": "^1.0.5",
+    "@radix-ui/react-collapsible": "^1.0.3",
+    "@radix-ui/react-form": "^0.0.3",
+    "@tanstack/react-query": "^5.29.2",
     "@vercel/analytics": "^1.1.1",
     "@vercel/speed-insights": "^1.0.2",
     "axios": "^1.6.7",
@@ -30,7 +37,8 @@
     "react": "^18",
     "react-dom": "^18",
     "tw-colors": "^3.3.1",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",

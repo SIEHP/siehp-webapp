@@ -1,9 +1,11 @@
-import { ReactNode } from "react"
+import { ReactNode } from "react";
 
 export interface ExampleContextData {
-    example: string
+  example: string;
+  userName?: string;
+  isLoading: boolean;
 }
 
 export interface ExampleProviderProps {
-    children: ReactNode
+  children: ReactNode;
 }

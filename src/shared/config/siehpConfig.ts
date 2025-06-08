@@ -1,4 +1,4 @@
-import { WrongEnviromentError } from "@/shared/domain/errors/wrong-enviroment-error";
+import { WrongEnviromentError } from "@/shared/infra/errors/wrong-enviroment-error";
 import z, { ZodError } from "zod";
 
 const SIEHPConfigSchema = z.object({

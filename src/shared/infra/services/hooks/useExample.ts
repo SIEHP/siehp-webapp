@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { ExampleContext } from "../contexts/ExampleProvider";
 import { ExampleContextData } from "../contexts/ExampleProvider/types";
-import { OutOfContextError } from "@/shared/domain/errors";
+import { OutOfContextError } from "@/shared/infra/errors";
 
 export function useExample(): ExampleContextData {
   const context = useContext(ExampleContext);

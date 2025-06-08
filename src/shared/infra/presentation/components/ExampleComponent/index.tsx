@@ -9,7 +9,7 @@ const ExampleComponentRoot = ({
     <div
       className={
         // Adicionar estilização tailwind aqui
-        `${className}`
+        `${className ?? ""}`
       }
       {...props}
     >
@@ -27,7 +27,7 @@ const ExampleComponentTitle = ({
     <h1
       className={
         // Adicionar estilização tailwind aqui
-        `${className}`
+        `${className ?? ""}`
       }
       {...props}
     >

@@ -4,9 +4,12 @@ import { createContext, useEffect, useState } from "react";
 import { ExampleContextData, ExampleProviderProps } from "./types";
 import { RemoteExample } from "@/shared/infra/services/data/usecases";
 import { exampleAdapter } from "@/shared/infra/services/data/adapters";
+import { useAuthStore } from "@/modules/user/infra/services/stores/auth-store";
+import { RemoteAuth } from "@/modules/user/infra/services/data/usecases";
+import { useQuery } from "@tanstack/react-query";
 
 export const ExampleContext = createContext<ExampleContextData>(
-  {} as ExampleContextData
+  {} as ExampleContextData,
 );
 
 const ExampleProvider = ({ children }: ExampleProviderProps) => {
@@ -25,8 +28,30 @@ const ExampleProvider = ({ children }: ExampleProviderProps) => {
     getExample();
   }, []);
 
+  const { setAuth } = useAuthStore();
+
+  const { isPending, error, data } = useQuery({
+    queryKey: ["auth-user"],
+    queryFn: async () => {
+      const userAuth = await new RemoteAuth().authUser({
+        email: "sadas",
+        password: "asdas",
+      });
+
+      setAuth(userAuth);
+
+      return userAuth;
+    },
+  });
+
   return (
-    <ExampleContext.Provider value={{ example }}>
+    <ExampleContext.Provider
+      value={{
+        example,
+        userName: data?.user.name,
+        isLoading: isPending,
+      }}
+    >
       {children}
     </ExampleContext.Provider>
   );

@@ -5,8 +5,13 @@ import siehpLogo from "@/shared/infra/presentation/assets/images/siehp_logo.png"
 import { useExample } from "@/shared/infra/services/hooks/useExample";
 import { ExampleComponent } from "@/shared/infra/presentation/components/ExampleComponent";
 
-const ExamplePage = () => {
-  const { example } = useExample();
+const ExamplePage = ({}) => {
+  const { example, userName, isLoading } = useExample();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
       Example Page
@@ -20,6 +25,7 @@ const ExamplePage = () => {
         width={siehpLogo.width}
         height={siehpLogo.height}
       />
+      {userName}
     </div>
   );
 };

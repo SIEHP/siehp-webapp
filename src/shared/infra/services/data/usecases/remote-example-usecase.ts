@@ -1,9 +1,9 @@
 
 // import axios from 'axios'
 // import { SIEHPConfig } from "@/shared/config/siehpConfig";
-import { GetExampleParamsDTO, GetExampleResponseDTO, GetExampleResponseSchema } from "@/shared/domain/dtos";
-import { ExampleError } from "@/shared/domain/errors";
-import { Example } from "@/shared/domain/usecases";
+import { GetExampleParamsDTO, GetExampleResponseDTO, GetExampleResponseSchema } from "@/shared/infra/dtos";
+import { ExampleError } from "@/shared/infra/errors";
+import { Example } from "@/shared/infra/usecases";
 import { CONSTANT } from "@/shared/infra/utils/constants";
 import { ZodError } from "zod";
 

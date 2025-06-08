@@ -11,6 +11,10 @@ export const PAGES: {
     label: "Ajuda",
     link: "/help",
   },
+  ADMIN: {
+    label: "Administração",
+    link: "/admin",
+  },
 };
 
 export const LANDING_PAGE_NAVBAR_LINKS: (keyof typeof PagesEnum)[] = [

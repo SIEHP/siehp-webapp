@@ -1,31 +1,21 @@
-import { Roboto } from "next/font/google";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-export * from "./metadata";
-import "./global.css";
+"use client";
 
-const roboto = Roboto({
-  weight: ["300", "400", "500", "700"],
-  subsets: ["latin", "latin-ext"],
-  style: ["italic", "normal"],
-  preload: true,
-  adjustFontFallback: true,
-  display: "swap",
-  variable: "--font-roboto",
-});
+export * from "./metadata";
+import ReactQueryProvider from "@/shared/config/libs/react-query";
+import "./global.css";
+import MakeAppLayout from "@/shared/infra/factories/layouts/MakeAppLayout";
+import { useAuthStore } from "@/modules/user/infra/services/stores/auth-store";
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <html lang="pt-br" data-theme="normal">
-      <body className={`${roboto.className}`}>
-        {children}
-        <Analytics />
-        <SpeedInsights />
-      </body>
-    </html>
-  );
+  const { auth } = useAuthStore()
+  console.log(auth);
+  return <ReactQueryProvider>
+            <MakeAppLayout>
+              {children}
+            </MakeAppLayout>
+          </ReactQueryProvider>;
 }
